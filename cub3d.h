@@ -6,7 +6,7 @@
 # include <string.h>
 # include <fcntl.h>
 
-
+#define PI 3.14159265359
 typedef struct s_cub
 {
 	void	*mlx;
@@ -19,6 +19,9 @@ typedef struct s_cub
 	int		win_h;
 	int		win_w;
 	int		*key_states;
+	float	theta;
+	float	speed;
+	float	rotation_speed;
 }		t_game;
 
 

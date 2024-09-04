@@ -106,6 +106,7 @@ void render_2d(t_game *game)
         }
         py++;
     }
+	bresenham_line(game, px, py, px + 20 * cos(game->theta), py+ 20 * sin(game->theta), 0xDE1140);
 }
 
 int key_press(int keycode, t_game *game)
@@ -124,15 +125,29 @@ int key_release(int keycode, t_game *game)
 
 void update_player_position(t_game *game)
 {
-    if (game->key_states[119])
-        game->playery -= 1;
-    if (game->key_states[115])
-        game->playery += 1;
     if (game->key_states[97])
-        game->playerx -= 1;
+        game->theta -= game->rotation_speed;
     if (game->key_states[100])
-        game->playerx += 1;
+        game->theta += game->rotation_speed;
+
+    // Keep theta within 0 to 2*PI for consistency
+    if (game->theta >= 2 * PI)
+        game->theta -= 2 * PI;
+    else if (game->theta < 0)
+        game->theta += 2 * PI;
+
+    if (game->key_states[119])
+    {
+        game->playerx += game->speed * cos(game->theta);
+        game->playery += game->speed * sin(game->theta);
+    }
+    if (game->key_states[115])
+    {
+        game->playerx -= game->speed * cos(game->theta);
+        game->playery -= game->speed * sin(game->theta);
+    }
 }
+
 
 int move(t_game *game)
 {
@@ -148,7 +163,10 @@ void game_init(t_game *game)
 {
     player_pos_real(game); 
     game->key_states = malloc(sizeof(int) * 256);
-    memset(game->key_states, 0, sizeof(int) * 256); 
+    memset(game->key_states, 0, sizeof(int) * 256);
+	game->theta = 0;
+    game->speed = 1;
+    game->rotation_speed = 0.01;
 }
 
 int main(int ac, char **av)
