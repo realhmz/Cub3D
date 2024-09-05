@@ -6,7 +6,7 @@
 /*   By: het-taja <het-taja@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:19:07 by het-taja          #+#    #+#             */
-/*   Updated: 2024/09/05 10:29:42 by het-taja         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:01:50 by het-taja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ int	wich_edge(t_game *game, int x, int y)
 	if (game->map[x] && (game->map[x][y] == '0' ))
 	{
 		i = 0;
-		if (y < (game->win_w -1) / 200 && game->map[x][y + 1] != '0')
+		if (y < (game->win_w -1) / 50 && game->map[x][y + 1] != '0')
 			right = 1;
-		if (x > 0 / 200 && game->map[x - 1][y] != '0')
+		if (x > 0 / 50 && game->map[x - 1][y] != '0')
 			up = 2;
 		if (y > 0 && game->map[x][y - 1] != '0')
 			left = 4;
-		if (x < (game->win_h - 1) / 200 && game->map[x + 1][y] != '0')
+		if (x < (game->win_h - 1) / 50 && game->map[x + 1][y] != '0')
 			down = 8;
 		i = left + right + down + up;
 		return (i);
@@ -54,7 +54,7 @@ void	put_edge(t_game *game, t_img *e, int x, int y)
 	if (i == -1)
 		return ;
 	if (game->map[y][x] == '0' && i != -1)
-		ft_put(game, e[i], x * 200, y * 200);
+		ft_put(game, e[i], x * 50, y * 50);
 }
 
 static void	more(t_game *game)

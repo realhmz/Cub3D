@@ -76,11 +76,11 @@ void	 load_map(t_game *game)
 	while (game->map[y])
 	{
 		x  = 0;
-		while (x < game->win_w / 200)
+		while (x < game->win_w / 50)
 		{
 			if (game->map[y][x] == '1')
 			{
-				ft_put(game, game->wall, x *200, y * 200);
+				ft_put(game, game->wall, x *50, y * 50);
 			}
 			if (game->map[y][x] == '0')
 			{
@@ -138,10 +138,10 @@ void game_init(t_game *game)
     game->key_states = malloc(sizeof(int) * 256);
     memset(game->key_states, 0, sizeof(int) * 256);
 	game->theta = 0;
-    game->speed = 1;
-    game->rotation_speed = 0.01;
-	game->win_w = ft_strlen(game->map[0]) * 200;
-	game->win_h = count_newline(game->map[0], game->map) * 200;
+    game->speed = 4;
+    game->rotation_speed = 0.02;
+	game->win_w = ft_strlen(game->map[0]) * 50;
+	game->win_h = count_newline(game->map[0], game->map) * 50;
 	printf("%d    %d\n\n",game->win_h, game->win_w);
 }
 
