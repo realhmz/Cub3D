@@ -6,7 +6,7 @@
 /*   By: het-taja <het-taja@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 11:02:38 by het-taja          #+#    #+#             */
-/*   Updated: 2024/09/04 12:03:00 by het-taja         ###   ########.fr       */
+/*   Updated: 2024/09/04 17:01:06 by het-taja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int	count_newline(char *str, char **map)
 	i = 0;
 	while (map && map[i])
 		i++;
-	if (i != x + 1)
-		return (-1);
-	return (x);
+	// if (i != x + 1)
+	// 	return (-1);
+	return (i);
 }

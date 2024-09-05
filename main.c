@@ -10,7 +10,7 @@ static void    bresenham_line(t_game *game, int x0, int y0, int x1, int y1, int 
 
     while (1) 
 	{
-        mlx_pixel_put(game->mlx, game->win, x0, y0, color);
+        put_pixel_img(game->base, x0, y0, color);
         if (x0 == x1 && y0 == y1)
 			break;
         int e2 = err * 2;
@@ -26,7 +26,7 @@ static void    bresenham_line(t_game *game, int x0, int y0, int x1, int y1, int 
 }
 
 
-void	draw_squar(t_game *game, int x, int y, int flag)
+void		draw_squar(t_game *game, int x, int y, int flag)
 {
 	int i = x + 50;
 	int j = y + 50;
@@ -52,121 +52,97 @@ void	draw_squar(t_game *game, int x, int y, int flag)
 			y++;
 		}
 	}
-	else
-	{
-		while (y < j)
-		{
-			x = tmp;
-			while (x < i)
-			{
-				if (y % 50 == 0 || x % 50 == 0)
-					mlx_pixel_put(game->mlx, game->win, x, y, 0xFF0000);
-				else
-					mlx_pixel_put(game->mlx, game->win, x, y, 0xFFD700);
-				x++;
-			}
-			y++;
-		}
-	}
 }
-void	load_map(t_game *game)
+void *load_map_thread(void *arg)
+{
+    t_game *game = (t_game *)arg;
+
+    while (1)
+    {
+        pthread_mutex_lock(&game->map_mutex);
+        load_map(game); // Non-graphical operations can run here
+        pthread_mutex_unlock(&game->map_mutex);
+
+        // Introduce some sleep to avoid busy-waiting
+        usleep(1000); // Sleep for 10ms
+    }
+    return NULL;
+}
+
+void	 load_map(t_game *game)
 {
 	int	x = 0;
 	int	y = 0;
 	while (game->map[y])
 	{
 		x  = 0;
-		while (x < ft_strlen(game->map[y]))
+		while (x < game->win_w / 200)
 		{
 			if (game->map[y][x] == '1')
-				draw_squar(game, x * 50, y * 50, 1);
+			{
+				ft_put(game, game->wall, x *200, y * 200);
+			}
+			if (game->map[y][x] == '0')
+			{
+				put_edge(game, game->asset->e, x, y);
+			}
+			
+			// if (game->map[y][x] == '1')
+			// 	draw_squar(game, x * 50, y * 50, 1);
 
-			else
-				draw_squar(game, x * 50, y * 50, 0);
+			// else
+			// 	draw_squar(game, x * 50, y * 50, 0);
 			x++;
 		}
 		y++;
 	}
-}
-void render_2d(t_game *game)
-{
-    int px = game->playerx;
-    int py = game->playery;
-    int i = px + 15;
-    int j = py + 15;
-    int tmp = px;
+    put_img_to_img(game->base, game->back, 0, 0);
 
-    while (py < j)
+}
+
+void *load_rotate(void *arg)
+{
+    t_game *game = (t_game *)arg;
+
+    while (1)
     {
-        px = tmp;
-        while (px < i)
-        {
-            mlx_pixel_put(game->mlx, game->win, px, py, 0xDE5140);
-            px++;
-        }
-        py++;
+        pthread_mutex_lock(&game->rotation_mutex);
+	    rotate_car_image(game);
+
+        // move(game); 
+        pthread_mutex_unlock(&game->rotation_mutex);
+
+        usleep(5000); // Sleep for 5ms to avoid busy-waiting
     }
-	bresenham_line(game, px, py, px + 20 * cos(game->theta), py+ 20 * sin(game->theta), 0xDE1140);
+    return NULL;
 }
-
-int key_press(int keycode, t_game *game)
+void *load_render(void *arg)
 {
-    if (keycode < 256)
-        game->key_states[keycode] = 1;
-    return 0;
-}
+    t_game *game = (t_game *)arg;
 
-int key_release(int keycode, t_game *game)
-{
-    if (keycode < 256)
-        game->key_states[keycode] = 0;
-    return 0;
-}
-
-void update_player_position(t_game *game)
-{
-    if (game->key_states[97])
-        game->theta -= game->rotation_speed;
-    if (game->key_states[100])
-        game->theta += game->rotation_speed;
-
-    // Keep theta within 0 to 2*PI for consistency
-    if (game->theta >= 2 * PI)
-        game->theta -= 2 * PI;
-    else if (game->theta < 0)
-        game->theta += 2 * PI;
-
-    if (game->key_states[119])
+    while (1)
     {
-        game->playerx += game->speed * cos(game->theta);
-        game->playery += game->speed * sin(game->theta);
+        pthread_mutex_lock(&game->rotation_mutex);
+		render_2d(game);
+        pthread_mutex_unlock(&game->rotation_mutex);
+        usleep(5000); // Sleep for 5ms to avoid busy-waiting
     }
-    if (game->key_states[115])
-    {
-        game->playerx -= game->speed * cos(game->theta);
-        game->playery -= game->speed * sin(game->theta);
-    }
-}
-
-
-int move(t_game *game)
-{
-
-    update_player_position(game);
-    load_map(game);
-    render_2d(game);
-
-    return 0;
+    return NULL;
 }
 
 void game_init(t_game *game)
 {
-    player_pos_real(game); 
+    player_pos_real(game);
+	game->asset = malloc(sizeof(t_asset));
+	game->asset->e = malloc(sizeof(t_img) * 16);
     game->key_states = malloc(sizeof(int) * 256);
     memset(game->key_states, 0, sizeof(int) * 256);
 	game->theta = 0;
     game->speed = 1;
     game->rotation_speed = 0.01;
+	game->win_w = ft_strlen(game->map[0]) * 200;
+	game->win_h = count_newline(game->map[0], game->map) * 200;
+	printf("%d    %d\n\n",game->win_h, game->win_w);
 }
 
 int main(int ac, char **av)
@@ -178,17 +154,25 @@ int main(int ac, char **av)
         printf("Error\n");
         exit(127);
     }
-
     game = malloc(sizeof(t_game));
-    game->mlx = mlx_init();
-    game->win = mlx_new_window(game->mlx, 800, 800, "Cub3d");
-
     read_map(game, av[1]);
     game_init(game);
-
+    game->mlx = mlx_init();
+    game->win = mlx_new_window(game->mlx, game->win_w, game->win_h, "Cub3d");
+	game->base = new_img(game->win_w, game->win_h, game);
+	game->back = new_img(game->win_w, game->win_h, game);
+	game->car = new_file_img("car.xpm", game);
+	game->wall = new_file_img("back.xpm", game);
+	edge_assets(game);
+	// draw_squar(game,0,0,1);
+	pthread_mutex_init(&game->map_mutex, NULL);
+	pthread_mutex_init(&game->rotation_mutex, NULL);
+	// pthread_create(&game->render_thread, NULL, &load_map_thread, (void *)game);
+	// pthread_create(&game->rotation_thread, NULL, &load_rotate, (void *)game);
+	// pthread_create(&game->rotation_thread, NULL, &load_render, (void *)game);
     mlx_hook(game->win, 02, (1L << 0), key_press, game);
     mlx_hook(game->win, 03, (1L << 1), key_release, game);
-
+    load_map(game);
     mlx_loop_hook(game->mlx, move, game);
 
     mlx_loop(game->mlx);
