@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-static void    bresenham_line(t_game *game, int x0, int y0, int x1, int y1, int color)
+void    bresenham_line(t_game *game, int x0, int y0, int x1, int y1, int color)
 {
     int dx = abs(x1 - x0);
     int dy = abs(y1 - y0);
@@ -78,14 +78,17 @@ void	 load_map(t_game *game)
 		x  = 0;
 		while (x < game->win_w / 50)
 		{
-			if (game->map[y][x] == '1')
-			{
+            if (game->map[y][x] == 'P')
+            {
+                game->car_x = x;
+                game->car_y = y;
+                ft_put(game, game->car, x * 50, y * 50);
+            }
+            
+			else if (game->map[y][x] == '1')
 				ft_put(game, game->wall, x *50, y * 50);
-			}
-			if (game->map[y][x] == '0')
-			{
+			else if (game->map[y][x] == '0')
 				put_edge(game, game->asset->e, x, y);
-			}
 			
 			// if (game->map[y][x] == '1')
 			// 	draw_squar(game, x * 50, y * 50, 1);
@@ -142,8 +145,53 @@ void game_init(t_game *game)
     game->rotation_speed = 0.02;
 	game->win_w = ft_strlen(game->map[0]) * 50;
 	game->win_h = count_newline(game->map[0], game->map) * 50;
+    player_pos(game);
 	printf("%d    %d\n\n",game->win_h, game->win_w);
 }
+int print(t_game *game)
+{
+    int i = 0;
+    while (game->map[i])
+    {
+        printf("%s\n",game->map[i]);
+        i++;
+    }
+    // sleep (1);
+    return (0);
+}
+// int main(int ac, char **av)
+// {
+//     t_game *game;
+
+//     if (ac != 2)
+//     {
+//         printf("Error\n");
+//         exit(127);
+//     }
+//     game = malloc(sizeof(t_game));
+//     read_map(game, av[1]);
+//     game_init(game);
+//     game->mlx = mlx_init();
+//     game->win = mlx_new_window(game->mlx, game->win_w, game->win_h, "Cub3d");
+// 	game->base = new_img(game->win_w, game->win_h, game);
+	
+// 	edge_assets(game);
+// 	// draw_squar(game,0,0,1);
+// 	// pthread_mutex_init(&game->map_mutex, NULL);
+// 	// pthread_mutex_init(&game->rotation_mutex, NULL);
+// 	// pthread_create(&game->render_thread, NULL, &load_map_thread, (void *)game);
+// 	// pthread_create(&game->rotation_thread, NULL, &load_rotate, (void *)game);
+// 	// pthread_create(&game->rotation_thread, NULL, &load_render, (void *)game);
+//     mlx_hook(game->win, 02, (1L << 0), key_press, game);
+//     mlx_hook(game->win, 03, (1L << 1), key_release, game);
+//     load_map(game);
+//     mlx_loop_hook(game->mlx, move, game);
+//     // mlx_loop_hook(game->mlx, print, game);
+
+//     mlx_loop(game->mlx);
+
+//     return 0;
+// }
 
 int main(int ac, char **av)
 {
@@ -160,21 +208,20 @@ int main(int ac, char **av)
     game->mlx = mlx_init();
     game->win = mlx_new_window(game->mlx, game->win_w, game->win_h, "Cub3d");
 	game->base = new_img(game->win_w, game->win_h, game);
-	game->back = new_img(game->win_w, game->win_h, game);
+    game->back = new_img(game->win_w, game->win_h, game);
 	game->car = new_file_img("car.xpm", game);
 	game->wall = new_file_img("back.xpm", game);
-	edge_assets(game);
-	// draw_squar(game,0,0,1);
-	pthread_mutex_init(&game->map_mutex, NULL);
-	pthread_mutex_init(&game->rotation_mutex, NULL);
-	// pthread_create(&game->render_thread, NULL, &load_map_thread, (void *)game);
-	// pthread_create(&game->rotation_thread, NULL, &load_rotate, (void *)game);
-	// pthread_create(&game->rotation_thread, NULL, &load_render, (void *)game);
+    game->car_height = game->car.h;
+    game->car_width = game->car.w;
+    // Setup event hooks and loop hooks
+    load_map(game);
     mlx_hook(game->win, 02, (1L << 0), key_press, game);
     mlx_hook(game->win, 03, (1L << 1), key_release, game);
-    load_map(game);
+
+    // Main game loop hook
     mlx_loop_hook(game->mlx, move, game);
 
+    // Start the rendering loop
     mlx_loop(game->mlx);
 
     return 0;

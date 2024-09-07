@@ -8,6 +8,15 @@
 #include <pthread.h>
 
 #define PI 3.14159265359
+#define FOV 60.0      // Field of view in degrees
+#define NUM_RAYS 60   // Number of rays to cast
+#define WALL_HEIGHT 1 // Height of the wall (arbitrary unit)
+#define DIST_TO_PLANE 277.0 // Distance to projection plane (adjust based on screen resolution)
+
+// Convert degrees to radians
+#define DEG2RAD(angle) ((angle) * PI / 180.0)
+
+
 typedef struct s_img
 {
 	void	*img_ptr;
@@ -41,6 +50,10 @@ typedef struct s_cub
 	float	speed;
 	float	rotation_speed;
 	long	fps;
+	float	car_x;
+	float	car_y;
+	int		last_y;
+	int		last_x;
 	t_asset	*asset;
 	pthread_t		render_thread;
 	pthread_t		rotation_thread;
@@ -51,6 +64,13 @@ typedef struct s_cub
 	t_img	back;
 	t_img	wall;
 	t_img	car;
+
+	int car_width;
+    int car_height;
+    double dirX; // Player's direction vector X
+    double dirY; // Player's direction vector Y
+    double planeX; // Camera plane X
+    double planeY; // Camera plane Y
 }		t_game;
 
 
@@ -111,6 +131,7 @@ void limit_frame_rate(int target_fps);
 
 //collition
 int	check_collision(int y, int x, int py, int px);
+int	collition(t_game *game, int py, int px);
 
 // tiles
 void	edge_assets(t_game *game);
@@ -118,3 +139,14 @@ void	put_edge(t_game *game, t_img *e, int x, int y);
 void	ft_put(t_game *game, t_img img, int x, int y);
 
 void rotate_car_image(t_game *game);
+
+
+//tmp
+int print(t_game *game);
+// raycasting
+void raycasting(t_game *game);
+void    bresenham_line(t_game *game, int x0, int y0, int x1, int y1, int color);
+
+void render_3d(t_game *game);
+void render_3d_projection(t_game *game);
+void render_3d_car(t_game *game);

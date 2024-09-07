@@ -6,7 +6,7 @@
 /*   By: het-taja <het-taja@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:08:45 by het-taja          #+#    #+#             */
-/*   Updated: 2024/09/05 10:52:22 by het-taja         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:28:24 by het-taja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ void rotate_car_image(t_game *game)
         // clear_img(&game->base, game->car.w + game->playerx, game->car.h+ game->playery, 0x000000); // Clear before redrawing
         
         // put_nimg_to_img(game->base, game->back, 0, 0, game->car.w + game->playerx, game->car.h+ game->playery);
-        put_nimg_to_img(game->base, game->back, 0, 0, game->car.w + game->playerx, game->car.h+ game->playery);
+        // clear_img(&game->base, game->base.w, game->base.h, 0);
+        // put_img_to_img(game->base, game->back, 0, 0);
+        put_nimg_to_img(game->base, game->back, 0, 0, game->car.w + game->playerx  + 10, game->car.h+ game->playery);
         int img_width = game->car.w;
         int img_height = game->car.h;
 
@@ -79,13 +81,10 @@ void render_2d(t_game *game)
     int i = px + 15;
     int j = py + 15;
     int tmp = px;
-
 	// clear_img(&game->base, game->playerx,game->playerx, 1);
-	count_fps(game);
     // put_img_to_img(game->base, game->back, 0, 0);
     // mlx_put_image_to_window(game->mlx, game->win, game->back.img_ptr, 0,0);
 	mlx_put_image_to_window(game->mlx, game->win, game->base.img_ptr, 0,0);
-	mlx_string_put(game->mlx, game->win, 600,100,0xFFD700, ft_itoa(game->fps));
 }
 
 int key_press(int keycode, t_game *game)
@@ -101,12 +100,23 @@ int key_release(int keycode, t_game *game)
         game->key_states[keycode] = 0;
     return 0;
 }
-
+void    update_map_position(t_game *game)
+{
+    int x;
+    int y;
+    game->map[game->last_y][game->last_x] = '0';
+    x = game->playerx / 50;
+    y = game->playery / 50;
+    game->map[y][x] = 'P';
+    game->last_x = x;
+    game->last_y = y;
+}
 void update_player_position(t_game *game)
 {
     double new_x = game->playerx;
     double new_y = game->playery;
 
+    
     if (game->key_states[97])
         game->theta -= game->rotation_speed;
     if (game->key_states[100])
@@ -119,13 +129,17 @@ void update_player_position(t_game *game)
 
     if (game->key_states[119])
     {
+        if (collition(game, new_y + game->speed * sin(game->theta), new_x +  game->speed * cos(game->theta)))
+            return;
         new_x += game->speed * cos(game->theta);
         new_y += game->speed * sin(game->theta);
     }
     if (game->key_states[115])
     {
-        new_x -= game->speed * cos(game->theta);
-        new_y -= game->speed * sin(game->theta);
+        if (collition(game, new_y - game->speed / 2 * sin(game->theta), new_x -  game->speed / 2 * cos(game->theta)))
+            return;
+        new_x -= game->speed / 2 * cos(game->theta);
+        new_y -= game->speed / 2 * sin(game->theta);
     }
 
     // Check boundaries before updating position
@@ -134,19 +148,32 @@ void update_player_position(t_game *game)
         game->playerx = new_x;
         game->playery = new_y;
     }
+    update_map_position(game);
 }
 
 
-
+void render_car(t_game *game)
+{
+    int car_x = (int)(game->playerx - (game->car.w / 2));
+    int car_y = (int)(game->playery - (game->car.h / 2));
+    
+    // Draw the car image
+    mlx_put_image_to_window(game->mlx, game->win, game->car.img_ptr, car_x, car_y);
+}
 
 int move(t_game *game)
 { 
+
     update_player_position(game);
     rotate_car_image(game);
     render_2d(game);
-    // mlx_put_image_to_window(game->mlx, game->win, game->base.img_ptr, 0,0);
+    // raycasting(game);
+    // render_3d_projection(game);
+    // render_3d_car(game);
+    // render_car(game);
+    count_fps(game);
+	mlx_string_put(game->mlx, game->win, 600,100,0xFFD700, ft_itoa(game->fps));
     limit_frame_rate(144);
-    // usleep(5000);
 
     return 0;
 }

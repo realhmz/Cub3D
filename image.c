@@ -6,7 +6,7 @@
 /*   By: het-taja <het-taja@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:35:53 by het-taja          #+#    #+#             */
-/*   Updated: 2024/09/05 10:51:42 by het-taja         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:15:52 by het-taja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,18 +84,20 @@ void	put_nimg_to_img(t_img dst, t_img src, int x, int y, int w, int h)
 {
 	int	i;
 	int	j;
+	int	tmp;
 
 	if (i > 150)
 		i = w - 150;
 	else
 		i = 0;
+	if (h > 120)
+		j = h - 120;
+	else
+		j = 0;
+	tmp = j;
 	while (i < w)
 	{
-		if (h > 150)
-			j = h - 150;
-		else
-			j = 0;
-		
+		j = tmp;
 		while (j < h)
 		{
 			put_pixel_img(dst, x + i, y + j, get_pixel_img(src, i, j));

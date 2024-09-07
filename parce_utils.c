@@ -6,7 +6,7 @@
 /*   By: het-taja <het-taja@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 11:02:38 by het-taja          #+#    #+#             */
-/*   Updated: 2024/09/04 17:01:06 by het-taja         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:29:06 by het-taja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	player_pos(t_game *game)
 		{
 			if (game->map[y][x] == 'P')
 			{
-				game->playerx = x;
-				game->playery = y;
+				game->last_x = x;
+				game->last_y = y;
 			}
 			x++;
 		}

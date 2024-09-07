@@ -6,41 +6,29 @@
 /*   By: het-taja <het-taja@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:08:22 by het-taja          #+#    #+#             */
-/*   Updated: 2024/09/04 15:12:40 by het-taja         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:27:32 by het-taja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "cub3d.h"
 
-// static int	more_utils(t_game *game, int x, int y)
-// {
-// 	// if (game->map[y][x] == 'C')
-// 	// {
-// 	// 	if (check_collision(y * 50, x * 50, game->playery, game->playerx))
-// 	// 	{
-// 	// 		game->map[y][x] = '0';
-// 	// 		render(game, game->asset);
-// 	// 		game->coin.is_collected = 1;
-// 	// 		game->coin.x = x ;
-// 	// 		game->coin.y = y;
-// 	// 		game->c--;
-// 	// 		return (0);
-// 	// 	}
-// 	// }
-// 	// else if (game->map[y][x] == '0')
-// 	// {
-// 	// 	if (check_collision(y * 50, x * 50, game->playery, game->playerx))
-// 	// 	{
-// 	// 		game->map[y][x] = 'P';
-// 	// 		game->map[game->last_y][game->last_x] = '0';
-// 	// 		game->last_x = x;
-// 	// 		game->last_y = y;
-// 	// 		return (0);
-// 	// 	}
-// 	// }
-// 	return (1);
-// }
+static int	more_utils(t_game *game, int x, int y)
+{
+	
+	if (game->map[y][x] == '0')
+	{
+		if (check_collision(y * 50, x * 50, game->playery, game->playerx))
+		{
+			game->map[y][x] = 'P';
+			game->map[game->last_y][game->last_x] = '0';
+			game->last_x = x;
+			game->last_y = y;
+			return (0);
+		}
+	}
+	return (1);
+}
 int	check_collision(int y, int x, int py, int px)
 {
 	int	h;
@@ -58,8 +46,8 @@ static int	more(t_game *game, int py, int px, int y)
 	x = 0;
 	while (game->map[y][x])
 	{
-		// if (more_utils(game, x, y) == 0)
-		// 	return (0);
+		if (more_utils(game, x, y) == 0)
+			return (0);
 		
 		if (game->map[y][x] == '1')
 		{
