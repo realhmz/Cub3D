@@ -65,14 +65,37 @@ int is_wall_P(t_game *game, double x, double y)
 		{
 			return (1);
 		}
+
 		if (game->map[j][i] == 'M')
 		{
 			return (2);
 		}
-		
 	}
 	return (0);
 }
+
+int is_wall_D(t_game *game, double x, double y)
+{
+	int i;
+	int j;
+
+	// i = (int)floor(x / 100);
+	// j = (int)floor(y / 100);
+	i = (int)(x / 100);
+	j = (int)(y / 100);
+
+	if (x <= 0 || y <= 0)
+		return (1);
+	if (game->map[j] && game->map[j][i])
+	{
+		if (game->map[j][i] == 'D')
+		{
+			return (1);
+		}
+	}
+	return (0);
+}
+
 void	dda_vars_init(t_game *game, double view, t_dda *vars)
 {
 	vars->ray_dir_x = cos(rad(view));
@@ -286,6 +309,38 @@ double end_point(t_game *game, double view)
         ray_y += dy;
         if (ray_x < 0 || ray_y < 0 || ray_x >= map_width || ray_y >= map_height)
             break;
+		if (is_wall_D(game, (int)ray_x, (int)ray_y))
+		{
+			delta_x = ray_x - game->Px;
+            delta_y = ray_y - game->Py;
+			x_decimal = fmod(ray_x, 100);
+			y_decimal = fmod(ray_y, 100);
+			double	dst = sqrt(delta_x * delta_x + delta_y * delta_y);
+			if (dst > 200)
+			{
+				game->side = 7;
+				game->hit_p = (int)y_decimal;
+				return sqrt(delta_x * delta_x + delta_y * delta_y);
+
+			}
+			else if (dst < 200)
+			{
+				if (dst > 150 && (y_decimal < 40 || y_decimal > 60))
+				{
+					game->side = 7;
+					game->hit_p = (int)y_decimal;
+					return sqrt(delta_x * delta_x + delta_y * delta_y);
+				}
+				if (dst < 150 && dst > 100 && (y_decimal < 15 || y_decimal > 85))
+				{
+					game->side = 7;
+					game->hit_p = (int)y_decimal;
+					return sqrt(delta_x * delta_x + delta_y * delta_y);
+				}
+			}
+			// if (game->side == 7 && y_decimal > 40 && y_decimal < 60)
+			// 	game->hit_p = (int)y_decimal;
+		}
 		if (is_wall_P(game, (int)ray_x, (int)ray_y))
         {
 			
@@ -359,12 +414,15 @@ double end_point_miro(t_game *game, double view)
             delta_y = ray_y - game->miror_y;
 			x_decimal = fmod(ray_x, 100);
 			y_decimal = fmod(ray_y, 100);
-			if (is_wall_m(game, (int)ray_x, (int)ray_y) == 2)
+			if (is_wall_P(game, (int)ray_x, (int)ray_y) == 2)
 			{
-				// game->side = 5;
-				game->p_flag = 1;
-				game->p_hit_p = (int)y_decimal; 
-				// game->hit_p = (int)y_decimal;
+				game->side = 6;
+				game->hit_p = (int)y_decimal;
+			}
+			if (is_wall_P(game, (int)ray_x, (int)ray_y) == 3)
+			{
+				game->side = 7;
+				game->hit_p = (int)y_decimal;
 			}
 			else if (x_decimal < 2 * EPSILON)
 			{

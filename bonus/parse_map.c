@@ -28,6 +28,7 @@ int	fillemptyspace(t_game *game, int j, char *s)
 					else if (game->map[j + 1] && game->map[j + 1][i]  == '0')
 						game->miror_view = 180;
 				}
+				else if(s[i] == 'D');
 				else if ((s[i] == 'N' || s[i] == 'S' || s[i] == 'W' || s[i] == 'E')
 					&& !game->Px && !game->Py)
 				{

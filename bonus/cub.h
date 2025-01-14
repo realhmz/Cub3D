@@ -124,6 +124,10 @@ typedef struct s_game
     t_img   ceiling_img;
     t_img   camera;
     t_img   camera_new;
+    t_img   door1;
+    t_img   door2;
+    t_img   door3;
+    t_img   door4;
 }               t_game;
 
 size_t	ftstrlen(const char *s);
@@ -133,6 +137,7 @@ char	*get_next_line(int fd, bool flag);
 t_game  *parsing(char *arg);
 void    ft_free(t_game *game);
 bool	parse_map(t_game *game);
+
 
 // images
 
@@ -150,5 +155,6 @@ double	rad(double angle);
 double end_point_miro(t_game *game, double view);
 double	end_point_mir(t_game *game, double view);
 t_img	new_file_img_safe(char *path, t_game *game);
+t_img	get_door_img(t_game *game);
 void *read_xpm_safely(void *mlx, int *width, int *height);
 #endif

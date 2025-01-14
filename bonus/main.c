@@ -32,7 +32,17 @@ void    ft_free(t_game *game)
 	free(game);
 }
 
-
+t_img	get_door_img(t_game *game)
+{
+	if (game->distance < 80)
+		return (game->door4);
+	else if (game->distance > 80 && game->distance < 150)
+		return (game->door3);
+	else if (game->distance > 150 && game->distance < 200)
+		return (game->door2);
+	else
+		return (game->door1);	
+}
 int get_wall_color(t_game *game, double curr_hit)
 {
 	int	color;
@@ -40,12 +50,7 @@ int get_wall_color(t_game *game, double curr_hit)
 	{
 		// printf("hit p  %d ,, cur %d\n",game->p_hit_p, curr_hit);
 		color =  get_pixel_img(game->player, game->p_hit_p,curr_hit);
-		// if (color == 0xffd700)
-		// {
-		// 	color = get_pixel_img(game->camera, game->hit_p, curr_hit);
-		// }
 		return color;
-		// return color;
 	}
 	if (game->side == 1)
 		return get_pixel_img(game->wall_w, game->hit_p, curr_hit);
@@ -55,6 +60,15 @@ int get_wall_color(t_game *game, double curr_hit)
 		return get_pixel_img(game->wall_e, game->hit_p, curr_hit);
 	else if (game->side == 3)
 		return get_pixel_img(game->wall_n, game->hit_p, curr_hit);
+	else if (game->side == 7)
+	{
+		color = get_pixel_img(game->door1, game->hit_p, curr_hit);
+		if (color)
+		{
+			return (color);
+		}
+		
+	}
 	else if (game->side == 6)
 	{
 		 return get_pixel_img(game->miror, game->hit_p, curr_hit);
@@ -239,6 +253,25 @@ int is_wall(t_game *game, int x, int y)
 	}
 	return (0);
 }
+
+int is_door(t_game *game, int x, int y)
+{
+	int i;
+	int j;
+
+	i = x / 100;
+	j = y / 100;
+	if (x <= 0 || y <= 0)
+		return (1);
+	if (game->map[j] && game->map[j][i])
+	{
+		if (game->map[j][i] == 'D')
+		{
+			return (1);
+		}
+	}
+	return (0);
+}
 int is_wall_miror(t_game *game, int x, int y)
 {
 	int i;
@@ -348,6 +381,11 @@ void ray_cast_mir(t_game *game)
 		if (y_end < 1) y_end = 1;
 		if (y_end >= 100) y_end = 100 - 1;		
 		fix_draw_mir(x, y_start, y_end, game, game->miror_distance);
+		if (game->side == 7)
+		{
+			put_img_to_img(game->back, game->door1, 500, 100);
+		}
+
 		draw_line_simple_mir(x, y_end, x, 100, game, calc_darkness(game, game->miror_distance, 0x0F282F));
 		draw_line_simple_mir(x, y_start, x, 0, game, 0x19325F);
 	}
@@ -540,8 +578,11 @@ void    render(t_game *game)
 			}
 			else if (game->map[y][x] == 'M')
 			{
-				draw_square(game, x * 25, y * 25, 0x747474);
-				
+				draw_square(game, x * 25, y * 25, 0x747474);	
+			}
+			else if (game->map[y][x] == 'D')
+			{
+				draw_square(game, x * 25, y * 25, 0xFFE199);
 			}
 			else if(game->map[y][x])
 			{
@@ -565,6 +606,15 @@ int	end_point_2d(t_game *game, int view)
 		// if (collide_with_wall_2d(game, x, y))
 		if (is_wall(game, x * 100 / 25, y * 100 / 25))
 			return (i);
+		if (is_door(game, x * 100 / 25, y * 100 / 25))
+		{
+			if (i > 50)
+			{
+				if (view > game->view - 10 && view < game->view + 10) ;
+				else
+					return (i);
+			}		
+		}		
 		i++;
 	}
 	return (i);
@@ -741,7 +791,7 @@ int	move(t_game *game)
 	player_moves(game);
 	mlx_destroy_image(game->mlx, game->back.img_ptr);
 	mlx_destroy_image(game->mlx, game->miror.img_ptr);
-	mlx_destroy_image(game->mlx, game->camera.img_ptr);
+	// mlx_destroy_image(game->mlx, game->camera.img_ptr);
 	mlx_destroy_image(game->mlx, game->mini_map.img_ptr);
 	mlx_destroy_image(game->mlx, game->map_frame.img_ptr);
 	// mlx_destroy_image(game->mlx, game->camera.img_ptr);
@@ -749,10 +799,10 @@ int	move(t_game *game)
 	game->miror = new_img(100, 100, game);
 	game->map_frame = new_img(200, 200, game);
 	game->mini_map = new_img(1280, 720, game);
-	// put_img_to_img(game->back, game->miror, 1000, 0);
-	game->camera = new_file_img_safe("frame.xpm", game);
+	put_img_to_img(game->back, game->miror, 1000, 0);
+	// game->camera = new_file_img_safe("frame.xpm", game);
 	game->camera_new = new_img(100,100,game);
-	scale_camera_to_mirror(game);
+	// scale_camera_to_mirror(game);
 	// ray_cast_mir(game);
 	put_img_to_img(game->miror, game->miror_frame,0, 0);
 	game->p_flag = 0;
@@ -851,6 +901,10 @@ int main(int ac, char **av)
 	game->wall_s = new_file_img(game->south, game);
 	game->wall_w = new_file_img(game->west, game);
 	game->wall_e = new_file_img(game->east, game);
+	game->door1 = new_file_img("door1.xpm", game);
+	game->door2 = new_file_img("door2.xpm", game);
+	game->door3 = new_file_img("door3.xpm", game);
+	game->door4 = new_file_img("door4.xpm", game);
 	mlx_hook(game->win, 02, (1L << 0), key_press, game);
 	mlx_hook(game->win, 03, (1L << 1), key_release, game);
 	mlx_loop_hook(game->mlx, move, game);
