@@ -85,11 +85,13 @@ typedef struct s_game
     char    *south;
     char    *west;
     char    *east;
+    char    PV;
     int     *floor;
     int     *ceiling;
 	char	*save;
 	char	*key;
     float     view;
+
     int     Px;
     int     Py;
     int     map_width;
@@ -108,6 +110,8 @@ typedef struct s_game
     int     p_hit_p;
     int     p_flag;
     int     texture_size;
+    int     ceiling_color;
+    int     floor_color;
     t_img   mini_map;
     t_img   map_frame;
     t_img   back;
@@ -151,6 +155,10 @@ int calc_darkness(t_game *game, double distance, int color);
 double	end_point(t_game *game, double view);
 double	rad(double angle);
 
+int	move_left(t_game *game);
+int move_right(t_game *game);
+int	move_back(t_game *game);
+int	move_front(t_game *game);
 
 double end_point_miro(t_game *game, double view);
 double	end_point_mir(t_game *game, double view);

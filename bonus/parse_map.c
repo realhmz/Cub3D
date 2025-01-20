@@ -15,25 +15,12 @@ int	fillemptyspace(t_game *game, int j, char *s)
 				s[i] = '1';
 			if (s[i] != '1' && s[i] != '0')
 			{
-				if (s[i] == 'M')
-				{
-					game->miror_x = i * TILE_SIZE +50;
-					game->miror_y = j * TILE_SIZE +50;
-					if (s[i + 1] && s[i + 1] == '0')
-						game->miror_view = 90;
-					else if (s[i - 1] && s[i - 1] == '0')
-						game->miror_view = -90;
-					else if (game->map[j - 1] && game->map[j - 1][i]  == '0')
-						game->miror_view = 0;
-					else if (game->map[j + 1] && game->map[j + 1][i]  == '0')
-						game->miror_view = 180;
-				}
-				else if(s[i] == 'D');
-				else if ((s[i] == 'N' || s[i] == 'S' || s[i] == 'W' || s[i] == 'E')
+				if ((s[i] == 'N' || s[i] == 'S' || s[i] == 'W' || s[i] == 'E')
 					&& !game->Px && !game->Py)
 				{
 					game->Px = i * TILE_SIZE + 25;
 					game->Py = j * TILE_SIZE + 25;
+					game->PV = s[i];
 				}
 				else
 					return (ft_putstr_fd("Error: invalid map\n", 2), false);

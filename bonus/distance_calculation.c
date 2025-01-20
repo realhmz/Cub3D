@@ -263,7 +263,7 @@ static double	calc_wall_dist(t_dda *vars, t_game *game, double *wall_x)
 	return (wall_dist);
 }
 
-double	end_point_ppp(t_game *game, double view)
+double	end_point(t_game *game, double view)
 {
 	t_dda	vars;
 	double	i;
@@ -285,7 +285,7 @@ double	end_point_ppp(t_game *game, double view)
 	return (wall_dist * 100);
 }
 
-double end_point(t_game *game, double view)
+double end_pointqq(t_game *game, double view)
 {
     const double cos_view = cos(rad(view));
     const double sin_view = sin(rad(view));
@@ -309,38 +309,38 @@ double end_point(t_game *game, double view)
         ray_y += dy;
         if (ray_x < 0 || ray_y < 0 || ray_x >= map_width || ray_y >= map_height)
             break;
-		if (is_wall_D(game, (int)ray_x, (int)ray_y))
-		{
-			delta_x = ray_x - game->Px;
-            delta_y = ray_y - game->Py;
-			x_decimal = fmod(ray_x, 100);
-			y_decimal = fmod(ray_y, 100);
-			double	dst = sqrt(delta_x * delta_x + delta_y * delta_y);
-			if (dst > 200)
-			{
-				game->side = 7;
-				game->hit_p = (int)y_decimal;
-				return sqrt(delta_x * delta_x + delta_y * delta_y);
+		// if (is_wall_D(game, (int)ray_x, (int)ray_y))
+		// {
+		// 	delta_x = ray_x - game->Px;
+        //     delta_y = ray_y - game->Py;
+		// 	x_decimal = fmod(ray_x, 100);
+		// 	y_decimal = fmod(ray_y, 100);
+		// 	double	dst = sqrt(delta_x * delta_x + delta_y * delta_y);
+		// 	if (dst > 200)
+		// 	{
+		// 		game->side = 7;
+		// 		game->hit_p = (int)y_decimal;
+		// 		return sqrt(delta_x * delta_x + delta_y * delta_y);
 
-			}
-			else if (dst < 200)
-			{
-				if (dst > 150 && (y_decimal < 40 || y_decimal > 60))
-				{
-					game->side = 7;
-					game->hit_p = (int)y_decimal;
-					return sqrt(delta_x * delta_x + delta_y * delta_y);
-				}
-				if (dst < 150 && dst > 100 && (y_decimal < 15 || y_decimal > 85))
-				{
-					game->side = 7;
-					game->hit_p = (int)y_decimal;
-					return sqrt(delta_x * delta_x + delta_y * delta_y);
-				}
-			}
-			// if (game->side == 7 && y_decimal > 40 && y_decimal < 60)
-			// 	game->hit_p = (int)y_decimal;
-		}
+		// 	}
+		// 	// else if (dst < 200)
+		// 	// {
+		// 	// 	if (dst > 150 && (y_decimal < 40 || y_decimal > 60))
+		// 	// 	{
+		// 	// 		game->side = 7;
+		// 	// 		game->hit_p = (int)y_decimal;
+		// 	// 		return sqrt(delta_x * delta_x + delta_y * delta_y);
+		// 	// 	}
+		// 	// 	if (dst < 150 && dst > 100 && (y_decimal < 15 || y_decimal > 85))
+		// 	// 	{
+		// 	// 		game->side = 7;
+		// 	// 		game->hit_p = (int)y_decimal;
+		// 	// 		return sqrt(delta_x * delta_x + delta_y * delta_y);
+		// 	// 	}
+		// 	// }
+		// 	// if (game->side == 7 && y_decimal > 40 && y_decimal < 60)
+		// 	// 	game->hit_p = (int)y_decimal;
+		// }
 		if (is_wall_P(game, (int)ray_x, (int)ray_y))
         {
 			
@@ -353,6 +353,11 @@ double end_point(t_game *game, double view)
 				game->side = 6;
 				game->hit_p = (int)y_decimal;
 			}
+			// else if (is_wall_D(game, (int)ray_x, (int)ray_y))
+			// {
+			// 	game->side = 7;
+			// 	game->hit_p = (int)y_decimal;
+			// }
 			else if (x_decimal < 2 * EPSILON)
 			{
 				game->side = 1;  // West wall
