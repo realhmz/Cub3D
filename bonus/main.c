@@ -497,6 +497,21 @@ int	move_left(t_game *game)
 	}
 	return (0);
 }
+void	open_door(t_game *game)
+{
+	int	dst;
+	int	x;
+	int	y;
+
+	dst = end_point_door(game, game->view);
+	if (dst)
+	{
+		x = game->Px / 4  + dst * cos(rad(game->view));
+		y = game->Py / 4 + dst * sin(rad(game->view));
+		if (is_door(game, x * 100 / 25, y * 100 / 25))
+			game->map[y / 25][x / 25] = 'O';
+	}
+}
 void	player_moves(t_game *game)
 {
 	if (game->key[130])
@@ -511,6 +526,8 @@ void	player_moves(t_game *game)
 		if (game->view < 0)
 			game->view = 360;
 	}
+	if (game->key['e'])
+		open_door(game);
 	move_front(game);
 	move_back(game);
 	move_right(game);
@@ -629,6 +646,22 @@ int	end_point_2d(t_game *game, int view)
 	}
 	return (i);
 }
+
+int	end_point_door(t_game *game, int view)
+{
+	int	i = 0;
+	int x = 0;
+	int y = 0;
+	while (i < 20)
+	{
+		x = game->Px / 4  + i * cos(rad(view));
+		y = game->Py / 4 + i * sin(rad(view));
+		if (is_door(game, x * 100 / 25, y * 100 / 25))
+			return (i);
+		i++;
+	}
+	return (0);
+}
 int	end_point_miror(t_game *game, int view)
 {
 	int	i = 0;
@@ -727,7 +760,7 @@ void	update_player(t_game *game)
 	if (game->map[py] && game->map[py][px])
 	{
 		// printf("x %d, y %d\n",px,py);
-		if (game->map[py][px] == 'D')
+		if (game->map[py][px] == 'D' || game->map[py][px] == 'O')
 			is_door = 1;
 		else
 			is_door = 0;

@@ -165,4 +165,7 @@ double	end_point_mir(t_game *game, double view);
 t_img	new_file_img_safe(char *path, t_game *game);
 t_img	get_door_img(t_game *game);
 void *read_xpm_safely(void *mlx, int *width, int *height);
+
+int	end_point_door(t_game *game, int view);
+
 #endif
