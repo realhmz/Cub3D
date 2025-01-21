@@ -28,6 +28,8 @@
 # define PLAYER_BUFFER 10
 # define QUATER 25
 
+#define SHAKE_AMPLITUDE 25.0
+#define SHAKE_FREQUENCY 0.10
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -112,6 +114,8 @@ typedef struct s_game
     int     texture_size;
     int     ceiling_color;
     int     floor_color;
+    int     movment_shake;
+    int     is_moving;
     t_img   mini_map;
     t_img   map_frame;
     t_img   back;
@@ -129,9 +133,6 @@ typedef struct s_game
     t_img   camera;
     t_img   camera_new;
     t_img   door1;
-    t_img   door2;
-    t_img   door3;
-    t_img   door4;
 }               t_game;
 
 size_t	ftstrlen(const char *s);
@@ -167,5 +168,6 @@ t_img	get_door_img(t_game *game);
 void *read_xpm_safely(void *mlx, int *width, int *height);
 
 int	end_point_door(t_game *game, int view);
+void update_movement_shake(t_game *game);
 
 #endif

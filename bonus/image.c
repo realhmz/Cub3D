@@ -30,21 +30,7 @@ t_img	new_file_img(char *path, t_game *game)
 	return (image);
 }
 
-t_img	new_file_img_safe(char *path, t_game *game)
-{
-	t_img		image;
-	static int	i;
 
-	image.win = game;
-	image.img_ptr = read_xpm_safely(game->mlx, &image.w, &image.h);
-	if (!image.img_ptr)
-		write(2, "File could not be read\n", 23);
-	else
-		image.addr = mlx_get_data_addr(image.img_ptr, &(image.bpp),
-				&(image.line_len), &(image.endian));
-	i++;
-	return (image);
-}
 
 void	put_pixel_img(t_img img, int x, int y, int color)
 {

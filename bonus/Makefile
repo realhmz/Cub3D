@@ -10,6 +10,7 @@ SRC = main.c \
       parsing.c \
 	  image.c\
 	  distance_calculation.c\
+	  animation.c\
 
 OBJ = $(SRC:.c=.o)
 LIBFT = libft/libft.a
