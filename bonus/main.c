@@ -172,7 +172,7 @@ int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 	i = 0;
 	while (i <= step)
 	{
-		put_pixel_img(game->back, (int)curr_x, (int)curr_y, color);
+		put_pixel_img(game->back, (int)curr_x, (int)curr_y, calc_darkness(game, i * 1.5, color));
 		curr_x += inc_x;
 		curr_y += inc_y;
 		i++;
@@ -420,7 +420,6 @@ void ray_cast(t_game *game)
 	double view = game->view;
 	double min = view - 30; 
 	double angle_step = 60.0 / 1280;
-	int color = 0xffd700;
 	float ca = view - min;
 	int ray = 0;
 	int x;
@@ -443,17 +442,14 @@ void ray_cast(t_game *game)
 		y_start = (720 / 2) - ((line_height ) / 2);
 		y_end = (720 / 2) + ((line_height ) / 2);		
 		game->hit_p_y = y_end - y_start;
-		color = calc_darkness(game, game->distance, color);
-		if (color < 0 || color > 0xFFFFFF)
-			continue;
 		if (y_start < 0) y_start = 0;
 		if (y_end < 1) y_end = 1;
 		if (y_end >= 720) y_end = 720 - 1;		
 		fix_draw(x, y_start, y_end, game, game->distance);
-		draw_line_simple(x, y_end, x, 720, game, calc_darkness(game, game->distance, game->floor_color));
+		draw_line_simple(x, 720, x, y_end, game, game->floor_color);
 		// draw ceiling 
 		// draw_ceiling(x, y_start,game, ray_angle);
-		draw_line_simple(x, y_start, x, 0, game, game->ceiling_color);
+		draw_line_simple(x, 0, x, y_start, game, game->ceiling_color);
 	}
 }
 int	move_front(t_game *game)
@@ -603,7 +599,7 @@ void    render(t_game *game)
 		{
 			if (game->map[y][x] == '1')
 			{
-				draw_square(game, x * 25, y * 25, 0xB4B4B4);
+				draw_square(game, x * 25, y * 25, 0x284420);
 			}
 			else if (game->map[y][x] == 'M')
 			{
@@ -615,7 +611,7 @@ void    render(t_game *game)
 			}
 			else if(game->map[y][x])
 			{
-				draw_square(game, x * 25, y * 25, 0x574b23);
+				draw_square(game, x * 25, y * 25, 0x000001);
 			}
 			x++;
 		}
@@ -674,7 +670,7 @@ void	draw_line_2d(int x0, int y0, int x1, int y1, t_game *game, int color)
 	err = abs(x1 - x0) - abs(y1 - y0);
 	while (x != x1 || y != y1)
 	{
-		dst += 4;
+		dst += 10;
 		put_pixel_img(game->mini_map, x, y, calc_darkness_2d(game, dst, color));
 		e2 = 2 * err;
 		if (e2 > - abs(y1 - y0))
