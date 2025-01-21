@@ -61,19 +61,15 @@ void	put_pixel_img(t_img img, int x, int y, int color)
 
 unsigned int	get_pixel_img(t_img img, int x, int y)
 {
-	if (x > img.line_len || y > img.h)
-	{
-		return 120;
-	}
+	if (x > img.line_len)
+		x = x % img.line_len;
+	if (y > img.h)
+		y = y % img.h;
+	if (x < 0)
+		x = 0;
+	if ( y < 0)
+		y = 0;
 	return (*(unsigned int *)((img.addr + (y * img.line_len) + (x * img.bpp / 8))));
-	// res  = (*(unsigned int *)((img.addr + (y * img.line_len) + (x * img.bpp / 8))));
-	// if (res >=  100)
-	// {
-	// 	return res;
-	// 	// printf("res %d\n", res);
-	// }
-	
-	return 0;
 }
 
 void	put_img_to_img(t_img dst, t_img src, int x, int y)
