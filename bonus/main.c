@@ -599,7 +599,8 @@ void    render(t_game *game)
 		{
 			if (game->map[y][x] == '1')
 			{
-				draw_square(game, x * 25, y * 25, 0x284420);
+				// draw_square(game, x * 25, y * 25, 0x284420);
+				put_img_to_img(game->mini_map, game->wall_n, x * 25, y * 25);
 			}
 			else if (game->map[y][x] == 'M')
 			{
