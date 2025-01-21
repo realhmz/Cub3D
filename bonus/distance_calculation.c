@@ -212,6 +212,20 @@ double	end_point_while2(t_game *game, t_dda *vars)
 			return MIN_WALL_DIST * 100;
 		vars->hit = 1;
 	}
+	else if (game->map[vars->map_y][vars->map_x] == 'D')
+	{
+		double dist;
+
+		game->side = 5;
+		if (vars->side == 0)
+			dist = vars->sidedist_x - vars->deltadist_x;
+		else
+			dist = vars->sidedist_y - vars->deltadist_y;
+			
+		if (dist < MIN_WALL_DIST)
+			return MIN_WALL_DIST * 100;
+		vars->hit = 1	;
+	}
 	return (0);
 }
 static double	get_wall_hit(t_game *game, double wall_x, int step, int side)
@@ -220,12 +234,14 @@ static double	get_wall_hit(t_game *game, double wall_x, int step, int side)
 	{
 		if (step < 0)
 		{
-			game->side = 1;
+			if (game->side != 5)
+				game->side = 1;
 			return (100 - (int)((wall_x - floor(wall_x)) * 100));
 		}
 		else
 		{
-			game->side = 2;
+			if (game->side != 5)
+				game->side = 2;
 			return ((int)((wall_x - floor(wall_x)) * 100));
 		}
 	}
@@ -233,12 +249,14 @@ static double	get_wall_hit(t_game *game, double wall_x, int step, int side)
 	{
 		if (step < 0)
 		{
-			game->side = 3;
+			if (game->side != 5)
+				game->side = 3;
 			return ((int)((wall_x - floor(wall_x)) * 100));
 		}
 		else
 		{
-			game->side = 4;
+			if (game->side != 5)
+				game->side = 4;
 			return (100 - (int)((wall_x - floor(wall_x)) * 100));
 		}
 	}
@@ -271,6 +289,7 @@ double	end_point(t_game *game, double view)
 	double	wall_dist;
 
 	dda_vars_init(game, view, &vars);
+	game->side = 0;
 	while (vars.hit == 0 && vars.i < 1000)
 	{
 		i = end_point_while(game, &vars);

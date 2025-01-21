@@ -60,15 +60,8 @@ int get_wall_color(t_game *game, double curr_hit)
 		return get_pixel_img(game->wall_e, game->hit_p, curr_hit);
 	else if (game->side == 3)
 		return get_pixel_img(game->wall_n, game->hit_p, curr_hit);
-	else if (game->side == 7)
-	{
-		color = get_pixel_img(game->door1, game->hit_p, curr_hit);
-		if (color)
-		{
-			return (color);
-		}
-		
-	}
+	else if (game->side == 5)
+		return (get_pixel_img(game->door1, game->hit_p, curr_hit));
 	else if (game->side == 6)
 	{
 		 return get_pixel_img(game->miror, game->hit_p, curr_hit);
@@ -246,7 +239,7 @@ int is_wall(t_game *game, int x, int y)
 		return (1);
 	if (game->map[j] && game->map[j][i])
 	{
-		if (game->map[j][i] == '1')
+		if (game->map[j][i] == '1' || game->map[j][i] == 'D')
 		{
 			return (1);
 		}
@@ -604,11 +597,12 @@ void    render(t_game *game)
 			}
 			else if (game->map[y][x] == 'M')
 			{
-				draw_square(game, x * 25, y * 25, 0x747474);	
+				draw_square(game, x * 25, y * 25, 0x747474);
 			}
 			else if (game->map[y][x] == 'D')
 			{
-				draw_square(game, x * 25, y * 25, 0xFFE199);
+				put_img_to_img(game->mini_map, game->door1, x * 25, y * 25);
+				// draw_square(game, x * 25, y * 25, 0xFFE199);
 			}
 			else if(game->map[y][x])
 			{
@@ -726,17 +720,31 @@ void	update_player(t_game *game)
 {
 	int px = game->Px / 100;
 	int py = game->Py / 100;
+	static	int	is_door;
+	static	int	next_door;
 	if (px < 0 || px > game->map_width || py < 0 || py > game->map_height)
 		return;
 	if (game->map[py] && game->map[py][px])
 	{
 		// printf("x %d, y %d\n",px,py);
+		if (game->map[py][px] == 'D')
+			is_door = 1;
+		else
+			is_door = 0;
 		game->map[py][px] = 'P';
 
 	}
 	if (game->last_x != px || game->last_y  != py)
 	{
-		game->map[game->last_y][game->last_x] = '0';
+		if (next_door)
+			game->map[game->last_y][game->last_x] = 'D';
+		else
+			game->map[game->last_y][game->last_x] = '0';
+		if (is_door)
+			next_door = 1;
+		else
+			next_door = 0;
+		
 		game->last_x = px;
 		game->last_y = py;
 	}

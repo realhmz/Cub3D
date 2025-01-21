@@ -15,7 +15,8 @@ int	fillemptyspace(t_game *game, int j, char *s)
 				s[i] = '1';
 			if (s[i] != '1' && s[i] != '0')
 			{
-				if ((s[i] == 'N' || s[i] == 'S' || s[i] == 'W' || s[i] == 'E')
+				if (s[i] == 'D') ;
+				else if ((s[i] == 'N' || s[i] == 'S' || s[i] == 'W' || s[i] == 'E')
 					&& !game->Px && !game->Py)
 				{
 					game->Px = i * TILE_SIZE + 25;
