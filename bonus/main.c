@@ -246,7 +246,7 @@ int is_wall(t_game *game, int x, int y)
 		return (1);
 	if (game->map[j] && game->map[j][i])
 	{
-		if (game->map[j][i] == '1' || game->map[j][i] =='M')
+		if (game->map[j][i] == '1')
 		{
 			return (1);
 		}
@@ -630,20 +630,10 @@ int	end_point_2d(t_game *game, int view)
 	int y = 0;
 	while (i < 60)
 	{
-		x = game->Px / 4  + i * cos(rad(game->view));
-		y = game->Py / 4 + i * sin(rad(game->view));
-		// if (collide_with_wall_2d(game, x, y))
+		x = game->Px / 4  + i * cos(rad(view));
+		y = game->Py / 4 + i * sin(rad(view));
 		if (is_wall(game, x * 100 / 25, y * 100 / 25))
 			return (i);
-		if (is_door(game, x * 100 / 25, y * 100 / 25))
-		{
-			if (i > 50)
-			{
-				if (view > game->view - 10 && view < game->view + 10) ;
-				else
-					return (i);
-			}		
-		}		
 		i++;
 	}
 	return (i);
@@ -703,36 +693,16 @@ void	draw_line_2d(int x0, int y0, int x1, int y1, t_game *game, int color)
 }
 void	ray_cast_2d(t_game *game)
 {
-	int	view = game->view;
-	int	min = view - 20;
-	int color = 0x00ffff;
-	int max = view + 20;
+	int	min = game->view - 25;
+	int color = 0xFFD700;
+	int max = game->view + 25;
 	while (min < max)
 	{
-		color = 0xffd700;
-		int distance_x = end_point_2d(game, min) * cos(rad(min));
-		int distance_y = end_point_2d(game, min) * cos(rad(min));
 		int new_x = (game->Px) / SCALE  + end_point_2d(game, min) * cos(rad(min));
 		int new_y = (game->Py)  / SCALE  + end_point_2d(game, min) * sin(rad(min));
-		if (distance_x > distance_y)
-			distance_y = distance_x;
-		else
-			distance_x = distance_y;
-		// if (is_edge(game, end_point_2d(game, min), min))
-		// {
-		// 	draw_line_2d(game->Px / 100 * 25, game->Py / 100 * 25, new_x, new_y, game, 0x00ff00);
-		// }
-		if (game->hit_2d == 1)
-			color = 0xffd700;
-		if (game->hit_2d == 2)
-			color = 0xffffff;
-		game->hit_2d = 0;
-		// else
-		// {
-			draw_line_2d((game->Px + 15) / SCALE, (game->Py + 15) / SCALE, new_x, new_y, game, color);
-		// }
-		// draw_line_2d(game->Px / SCALE, game->Py / SCALE, new_x, new_y, game, 0x00ff00);
-		min ++;
+		min++;
+		draw_line_2d((game->Px + 15) / SCALE, (game->Py + 15) / SCALE, new_x, new_y, game, color);
+
 	}
 }
 void	ray_cast_miror(t_game *game)
