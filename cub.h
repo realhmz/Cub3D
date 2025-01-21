@@ -38,21 +38,21 @@ typedef struct s_img
 
 typedef struct s_dda
 {
-    double ray_dir_x;
-    double ray_dir_y;
-    double pos_x;
-    double pos_y;
-    int map_x;
-    int map_y;
-    double deltadist_x;
-    double deltadist_y;
-    int step_x;
-    int step_y;
-    double sidedist_x;
-    double sidedist_y;
-    int hit;
-    int side;
-    int i;
+	double	ray_dir_x;
+	double	ray_dir_y;
+	double	pos_x;
+	double	pos_y;
+	int		map_x;
+	int		map_y;
+	double	deltadist_x;
+	double	deltadist_y;
+	int		step_x;
+	int		step_y;
+	double	sidedist_x;
+	double	sidedist_y;
+	int		hit;
+	int		side;
+	int		i;
 }   t_dda;
 
 typedef struct s_game
@@ -60,51 +60,59 @@ typedef struct s_game
 	void	*mlx;
 	void	*win;
 	char	**map;
-	char    *north;
-    char    *south;
-    char    *west;
-    char    *east;
-    int     *floor;
-    int     *ceiling;
+	char	*north;
+	char	*south;
+	char	*west;
+	char	*east;
+	int		*floor;
+	int		*ceiling;
+	int		floor_color;
+	int		ceiling_color;
 	char	*save;
+	char	pv;
 	char	*key;
-    float     view;
-    int     Px;
-    int     Py;
-    int     map_width;
-    int     map_height;
-    double  hit_p;
-    double  hit_p_y;
-	double distance;
-    int     side;
-    t_img   mini_map;
-    t_img   back;
-    t_img   gun;
-    t_img   cros;
-    t_img   wall_w;
-    t_img   wall_e;
-    t_img   wall_s;
-    t_img   wall_n;
-    t_dda   vars;
-}               t_game;
+	float	view;
+	int		Px;
+	int		Py;
+	int		map_width;
+	int		map_height;
+	double	hit_p;
+	double	hit_p_y;
+	double	distance;
+	int		side;
+	t_img	back;
+	t_img	gun;
+	t_img	cros;
+	t_img	wall_w;
+	t_img	wall_e;
+	t_img	wall_s;
+	t_img	wall_n;
+	t_dda	vars;
+}			t_game;
 
-size_t	ftstrlen(const char *s);
-char	*ftstrdup(const char *s1);
-char	*my_strjoin(char *s1, char const *s2);
-char	*get_next_line(int fd, bool flag);
-t_game  *parsing(char *arg);
-void    ft_free(t_game *game);
-bool	parse_map(t_game *game);
-
+size_t			ftstrlen(const char *s);
+char			*ftstrdup(const char *s1);
+char			*my_strjoin(char *s1, char const *s2);
+char			*get_next_line(int fd, bool flag);
+t_game			*parsing(char *arg);
+void			ft_free(t_game *game);
+bool			parse_map(t_game *game);
 // images
-
-void	put_img_to_img(t_img dst, t_img src, int x, int y);
+void			put_img_to_img(t_img dst, t_img src, int x, int y);
 unsigned int	get_pixel_img(t_img img, int x, int y);
-void	put_pixel_img(t_img img, int x, int y, int color);
-t_img	new_file_img(char *path, t_game *game);
-t_img	new_img(int w, int h, t_game *game);
+void			put_pixel_img(t_img img, int x, int y, int color);
+t_img			new_file_img(char *path, t_game *game);
+t_img			new_img(int w, int h, t_game *game);
 // rendring
-int calc_darkness(t_game *game, double distance, int color);
-double	end_point(t_game *game, double view);
-double	rad(double angle);
+int				calc_darkness(double distance, int color);
+double			end_point(t_game *game, double view);
+double			rad(double angle);
+//utils
+int	calc_map_h(char **map);
+int	max_width(char **map);
+int	get_ceiling_color(int *rgb);
+int	get_pv(char pv);
+//moves
+int is_wall(t_game *game, int x, int y);
+void	player_moves(t_game *game);
 #endif

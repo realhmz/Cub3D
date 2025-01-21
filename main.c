@@ -47,7 +47,7 @@ int get_wall_color(t_game *game, double curr_hit)
 	return 0;
 }
 
-int fix_draw(int x, int y1, int y2, t_game *game, double distance)
+int fix_draw(int x, t_game *game, double distance)
 {
 	double step = 720 / 2;
 	double inc_y = 1.0;
@@ -65,13 +65,13 @@ int fix_draw(int x, int y1, int y2, t_game *game, double distance)
 		if (curr_y_up >= 0 && curr_hit_up >= 0 && curr_hit_up <= 100)
 		{
 			int color = get_wall_color(game, curr_hit_up);
-			color = calc_darkness(game, distance, color);
+			color = calc_darkness(distance, color);
 			put_pixel_img(game->back, x, (int)curr_y_up, color);
 		}
 		if (curr_y_down < 720 && curr_hit_down >= 0 && curr_hit_down <= 100)
 		{
 			int color = get_wall_color(game, curr_hit_down);
-			color = calc_darkness(game, distance, color);
+			color = calc_darkness(distance, color);
 			put_pixel_img(game->back, x, (int)curr_y_down, color);
 		}
 		curr_y_up -= inc_y;
@@ -96,10 +96,10 @@ int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 	int		i;
 	dx = x2 - x1;
 	dy = y2 - y1;
-	if (abs(dx) > abs(dy))
-		step = abs(dx);
+	if (abs((int)dx) > abs((int)dy))
+		step = abs((int)dx);
 	else
-		step = abs(dy);
+		step = abs((int)dy);
 	inc_x = dx / step;
 	inc_y = dy / step;
 	curr_x = x1;
@@ -107,7 +107,7 @@ int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 	i = 0;
 	while (i <= step)
 	{
-		put_pixel_img(game->back, (int)curr_x, (int)curr_y, color);
+		put_pixel_img(game->back, (int)curr_x, (int)curr_y, calc_darkness((double)(i * 1.5), color));
 		curr_x += inc_x;
 		curr_y += inc_y;
 		i++;
@@ -162,7 +162,7 @@ int is_wall(t_game *game, int x, int y)
 
 
 
-int	calc_darkness(t_game *game, double dst, int color)
+int	calc_darkness(double dst, int color)
 {
 	int r = color / 256 / 256;
 	int g = (color / 256) % 256;
@@ -192,7 +192,6 @@ void ray_cast(t_game *game)
 	double view = game->view;
 	double min = view - 30; 
 	double angle_step = 60.0 / 1280;
-	int color = 0xffd700;
 	float ca = view - min;
 	int ray = 0;
 	int x;
@@ -215,60 +214,12 @@ void ray_cast(t_game *game)
 		y_start = (720 / 2) - ((line_height ) / 2);
 		y_end = (720 / 2) + ((line_height ) / 2);		
 		game->hit_p_y = y_end - y_start;
-		color = calc_darkness(game, game->distance, color);
-		if (color < 0 || color > 0xFFFFFF)
-			continue;
-		if (y_start < 0) y_start = 0;
-		if (y_end < 1) y_end = 1;
-		if (y_end >= 720) y_end = 720 - 1;		
-		fix_draw(x, y_start, y_end, game, game->distance);
-		draw_line_simple(x, y_end, x, 720, game, calc_darkness(game, game->distance, 0x563123));
-		draw_line_simple(x, y_start, x, 0, game, 0x00ffff);
+		fix_draw(x, game, game->distance);
+		draw_line_simple(x, 720, x, y_end, game, game->floor_color);
+		draw_line_simple(x, 0, x, y_start, game, game->ceiling_color);
 	}
 }
 
-void	player_moves(t_game *game)
-{
-	if (game->key[130])
-	{
-		game->view += 2;
-		if (game->view > 360)
-			game->view = 0;
-	}
-	if (game->key[131])
-	{
-		game->view -= 2;
-		if (game->view < 0)
-			game->view = 360;
-	}	
-	if (game->key[119] && !is_wall(game, game->Px + round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view))), game->Py + round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view)))))
-	{
-		if (!is_wall(game, game->Px + round(MOVE_SPEED * cos(rad(game->view + 30))), game->Py + round(MOVE_SPEED * sin(rad(game->view + 30)))))
-		{
-			if (!is_wall(game, game->Px + round(MOVE_SPEED * cos(rad(game->view - 30))), game->Py + round(MOVE_SPEED * sin(rad(game->view - 30)))))
-			{
-				game->Py += round(MOVE_SPEED * sin(rad(game->view)));
-				game->Px += round(MOVE_SPEED * cos(rad(game->view)));
-			}
-		}	
-	}
-	if (game->key[115] && !is_wall(game, game->Px - round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view))), game->Py - round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view)))))
-	{
-		game->Py -= round(MOVE_SPEED * sin(rad(game->view)));
-		game->Px -= round(MOVE_SPEED * cos(rad(game->view)));
-	}
-
-	if (game->key[100] && !is_wall(game, game->Px - round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view))), game->Py + round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view)))))
-	{
-		game->Px -= round(MOVE_SPEED * sin(rad(game->view)));
-		game->Py += round(MOVE_SPEED * cos(rad(game->view)));
-	}
-	if (game->key[97] && !is_wall(game, game->Px + round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view))), game->Py - round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view)))))
-	{
-		game->Px += round(MOVE_SPEED * sin(rad(game->view)));
-		game->Py -= round(MOVE_SPEED * cos(rad(game->view)));
-	}
-}
 
 int	move(t_game *game)
 {
@@ -281,32 +232,24 @@ int	move(t_game *game)
 	mlx_put_image_to_window(game->mlx, game->win, game->back.img_ptr, 0, 0);
 	return (0);
 }
-int	calc_map_h(char **map)
-{
-	int	i;
 
-	i = 0;
-	while (map && map[i])
-		i++;
-	return (i);
-}
-int	max_width(char **map)
+void	game_init(t_game *game)
 {
-	int	i;
-	int	j;
-	int max;
-
-	i = 0;
-	j = 0;
-	max = ft_strlen(map[0]);
-	while (map && map[i])
-	{
-		j = ft_strlen(map[i]);
-		if (j > max)
-			max = j;
-		i++;
-	}
-	return (max);
+	game->back = new_img(1280, 720, game);
+	game->key = malloc(sizeof(char) * 150);
+	game->view = 0;
+	game->ceiling_color = get_ceiling_color(game->ceiling);
+	game->floor_color = get_ceiling_color(game->floor);
+	game->map_height = calc_map_h(game->map);
+	game->map_width = max_width(game->map);
+	game->key = memset(game->key, 0, 150);
+	game->gun = new_file_img("gun.xpm", game);
+	game->cros = new_file_img("cros.xpm", game);
+	game->wall_n = new_file_img(game->north, game);
+	game->wall_s = new_file_img(game->south, game);
+	game->wall_w = new_file_img(game->west, game);
+	game->wall_e = new_file_img(game->east, game);
+	game->view = get_pv(game->pv);
 }
 int main(int ac, char **av)
 {
@@ -318,24 +261,10 @@ int main(int ac, char **av)
 	if (!game)
 		return (1);
 	if (!parse_map(game))
-	{
 		return (ft_free(game), 1);
-	}
 	game->mlx = mlx_init();
 	game->win = mlx_new_window(game->mlx, 1280, 720, "Cub3d");
-	game->back = new_img(1280, 720, game);
-	game->mini_map = new_img(1280, 720, game);
-	game->key = malloc(sizeof(char) * 150);
-	game->map_height = calc_map_h(game->map);
-	game->map_width = max_width(game->map);
-	game->key = memset(game->key, 0, 150);
-	game->view = -90;
-	game->gun = new_file_img("gun.xpm", game);
-	game->cros = new_file_img("cros.xpm", game);
-	game->wall_n = new_file_img(game->north, game);
-	game->wall_s = new_file_img(game->south, game);
-	game->wall_w = new_file_img(game->west, game);
-	game->wall_e = new_file_img(game->east, game);
+	game_init(game);
 	mlx_hook(game->win, 02, (1L << 0), key_press, game);
 	mlx_hook(game->win, 03, (1L << 1), key_release, game);
 	mlx_loop_hook(game->mlx, move, game);
