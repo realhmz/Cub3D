@@ -82,7 +82,6 @@ typedef struct s_game
 	int		side;
 	t_img	back;
 	t_img	gun;
-	t_img	cros;
 	t_img	wall_w;
 	t_img	wall_e;
 	t_img	wall_s;
@@ -115,4 +114,5 @@ int	get_pv(char pv);
 //moves
 int is_wall(t_game *game, int x, int y);
 void	player_moves(t_game *game);
+int	win(t_game *game);
 #endif

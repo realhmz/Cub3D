@@ -107,7 +107,7 @@ int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 	i = 0;
 	while (i <= step)
 	{
-		put_pixel_img(game->back, (int)curr_x, (int)curr_y, calc_darkness((double)(i * 1.5), color));
+		put_pixel_img(game->back, (int)curr_x, (int)curr_y,calc_darkness(i * 1.5, color));
 		curr_x += inc_x;
 		curr_y += inc_y;
 		i++;
@@ -117,6 +117,8 @@ int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 
 int	key_press(int keycode, t_game *game)
 {
+	if (keycode == 65307)
+		exit(win(game));
 	if (keycode == 65363)
 		game->key[130] = 1;
 	if (keycode == 65361)
@@ -159,9 +161,6 @@ int is_wall(t_game *game, int x, int y)
 }
 
 
-
-
-
 int	calc_darkness(double dst, int color)
 {
 	int r = color / 256 / 256;
@@ -194,7 +193,6 @@ void ray_cast(t_game *game)
 	double angle_step = 60.0 / 1280;
 	float ca = view - min;
 	int ray = 0;
-	int x;
 	int line_height;
 	int y_start;
 	int y_end;
@@ -209,14 +207,13 @@ void ray_cast(t_game *game)
 		if (ca > 360)
 			ca = ca - 360;
 		game->distance = game->distance * cos(rad(ca));
-		x = ray * (1280 / 1280);
 		line_height = (int)((100 * 720 ) / game->distance);
 		y_start = (720 / 2) - ((line_height ) / 2);
 		y_end = (720 / 2) + ((line_height ) / 2);		
 		game->hit_p_y = y_end - y_start;
-		fix_draw(x, game, game->distance);
-		draw_line_simple(x, 720, x, y_end, game, game->floor_color);
-		draw_line_simple(x, 0, x, y_start, game, game->ceiling_color);
+		fix_draw(ray, game, game->distance);
+		draw_line_simple(ray, 720, ray, y_end, game, game->floor_color);
+		draw_line_simple(ray, 0, ray, y_start, game, game->ceiling_color);
 	}
 }
 
@@ -228,7 +225,6 @@ int	move(t_game *game)
 	game->back = new_img(1280, 720, game);
 	ray_cast(game);
 	put_img_to_img(game->back, game->gun, 666, 450 );
-	put_img_to_img(game->back, game->cros, 615, 335);
 	mlx_put_image_to_window(game->mlx, game->win, game->back.img_ptr, 0, 0);
 	return (0);
 }
@@ -244,12 +240,27 @@ void	game_init(t_game *game)
 	game->map_width = max_width(game->map);
 	game->key = memset(game->key, 0, 150);
 	game->gun = new_file_img("gun.xpm", game);
-	game->cros = new_file_img("cros.xpm", game);
 	game->wall_n = new_file_img(game->north, game);
 	game->wall_s = new_file_img(game->south, game);
 	game->wall_w = new_file_img(game->west, game);
 	game->wall_e = new_file_img(game->east, game);
 	game->view = get_pv(game->pv);
+}
+int	win(t_game *game)
+{
+	free(game->key);
+	mlx_destroy_image(game->mlx, game->wall_e.img_ptr);
+	mlx_destroy_image(game->mlx, game->wall_s.img_ptr);
+	mlx_destroy_image(game->mlx, game->wall_w.img_ptr);
+	mlx_destroy_image(game->mlx, game->wall_n.img_ptr);
+	mlx_destroy_image(game->mlx, game->gun.img_ptr);
+	mlx_destroy_image(game->mlx, game->back.img_ptr);
+	mlx_destroy_window(game->mlx, game->win);
+	mlx_destroy_display(game->mlx);
+	free(game->mlx);
+	ft_free(game);
+	exit(0);
+	return(0);
 }
 int main(int ac, char **av)
 {
@@ -265,6 +276,7 @@ int main(int ac, char **av)
 	game->mlx = mlx_init();
 	game->win = mlx_new_window(game->mlx, 1280, 720, "Cub3d");
 	game_init(game);
+	mlx_hook(game->win, 17, 0, win, game);
 	mlx_hook(game->win, 02, (1L << 0), key_press, game);
 	mlx_hook(game->win, 03, (1L << 1), key_release, game);
 	mlx_loop_hook(game->mlx, move, game);
