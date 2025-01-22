@@ -123,8 +123,27 @@ int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 	return (500);
 }
 
+int	win(t_game *game)
+{
+	free(game->key);
+	mlx_destroy_image(game->mlx, game->wall_e.img_ptr);
+	mlx_destroy_image(game->mlx, game->wall_s.img_ptr);
+	mlx_destroy_image(game->mlx, game->wall_w.img_ptr);
+	mlx_destroy_image(game->mlx, game->wall_n.img_ptr);
+	mlx_destroy_image(game->mlx, game->gun.img_ptr);
+	mlx_destroy_image(game->mlx, game->back.img_ptr);
+	mlx_destroy_window(game->mlx, game->win);
+	mlx_destroy_display(game->mlx);
+	free(game->mlx);
+	ft_free(game);
+	exit(0);
+	return (0);
+}
+
 int	key_press(int keycode, t_game *game)
 {
+	if (keycode == 65307)
+		exit(win(game));
 	if (keycode == 65363)
 		game->key[130] = 1;
 	if (keycode == 65361)
@@ -269,6 +288,7 @@ void	ray_cast(t_game *game)
 	}
 }
 
+
 int	move_front(t_game *game)
 {
 	if (game->key[119])
@@ -290,6 +310,7 @@ int	move_front(t_game *game)
 	}
 	return (0);
 }
+
 int	move_back(t_game *game)
 {
 	if (game->key[115])
@@ -399,7 +420,7 @@ void	render_player(t_game *game)
 	int	save_x = 0, save_y = 0;
 	double	x;
 	double	y;
-	
+
 	x = game->Px / 4.0;
 	y = game->Py / 4.0;
 	x += 0;
@@ -719,6 +740,7 @@ int	main(int ac, char **av)
 	game->mlx = mlx_init();
 	game->win = mlx_new_window(game->mlx, 1280, 720, "Cub3d");
 	game_init(game);
+	mlx_hook(game->win, 17, 0, win, game);
 	mlx_hook(game->win, 02, (1L << 0), key_press, game);
 	mlx_hook(game->win, 03, (1L << 1), key_release, game);
 	game->view = get_pv(game->pv);
