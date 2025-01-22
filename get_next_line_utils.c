@@ -1,4 +1,3 @@
-
 #include "cub.h"
 
 size_t	ftstrlen(const char *s)

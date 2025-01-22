@@ -87,13 +87,12 @@ typedef struct s_game
     char    *south;
     char    *west;
     char    *east;
-    char    PV;
     int     *floor;
     int     *ceiling;
 	char	*save;
 	char	*key;
     float     view;
-
+    char    pv;
     int     Px;
     int     Py;
     int     map_width;
@@ -139,6 +138,25 @@ size_t	ftstrlen(const char *s);
 char	*ftstrdup(const char *s1);
 char	*my_strjoin(char *s1, char const *s2);
 char	*get_next_line(int fd, bool flag);
+
+bool	space_checker(char c);
+bool	check_var(char *str);
+bool	save_checker(t_game *game, bool flag, char c);
+bool	afterline(char *line, int i);
+bool	path_checker(t_game *game, char *var, char *line, int i);
+
+bool	searchar(char *str);
+bool	help(char *temp, t_game *game, int *counter, char *var);
+bool	line_parser(t_game *game, char *var, char *str, int i);
+bool	color_checker(t_game *game, char *var, char *line, int i);
+bool	put_val(t_game *game, char *str, char *line, int i);
+
+bool	handle_str(t_game *game, char *str, char *line, int i);
+bool	fillin_data(t_game *game, char *line);
+t_list	*fillin_map(char *line, t_list *lst);
+bool	done(t_game *game);
+bool	help2(char *line, int fd, t_game *game);
+
 t_game  *parsing(char *arg);
 void    ft_free(t_game *game);
 bool	parse_map(t_game *game);

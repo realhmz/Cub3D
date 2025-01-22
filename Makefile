@@ -1,6 +1,6 @@
 NAME = cub3d
 CC = gcc
-CFLAGS = -Wall -Wextra #-fsanitize=address -g3 #-Wextra -Werror
+CFLAGS = -Wall -Wextra #-fsanitize=address -g3 -Werror
 FLAGS = -Lmlx_linux -lmlx_Linux -L./minilibx-linux/ -Imlx_linux -lXext -lX11 -lm -lz
 
 SRC = main.c \
@@ -8,8 +8,12 @@ SRC = main.c \
       get_next_line.c \
       get_next_line_utils.c \
       parsing.c \
+	  parsing1.c \
+	  parsing2.c \
+	  parsing3.c \
 	  image.c\
 	  distance_calculation.c\
+	  dist_cal.c\
 	  utils.c\
 	  move.c\
 

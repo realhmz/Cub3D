@@ -1,14 +1,13 @@
 #include "cub.h"
 
-
 double	rad(double angle)
 {
 	return (angle * M_PI / 180);
 }
 
-void    ft_free(t_game *game)
+void	ft_free(t_game *game)
 {
-	int i;
+	int	i;
 
 	free(game->save);
 	free(game->ceiling);
@@ -32,19 +31,18 @@ void    ft_free(t_game *game)
 	free(game);
 }
 
-
 int get_wall_color(t_game *game, double curr_hit)
 {
 	
 	if (game->side == 1)
-		return get_pixel_img(game->wall_w, game->hit_p, curr_hit);
+		return (get_pixel_img(game->wall_w, game->hit_p, curr_hit));
 	else if (game->side == 4)
-		return get_pixel_img(game->wall_s, game->hit_p, curr_hit);
+		return (get_pixel_img(game->wall_s, game->hit_p, curr_hit));
 	else if (game->side == 2)
-		return get_pixel_img(game->wall_e, game->hit_p, curr_hit);
+		return (get_pixel_img(game->wall_e, game->hit_p, curr_hit));
 	else if (game->side == 3)
-		return get_pixel_img(game->wall_n, game->hit_p, curr_hit);
-	return 0;
+		return (get_pixel_img(game->wall_n, game->hit_p, curr_hit));
+	return (0);
 }
 
 int fix_draw(int x, t_game *game, double distance)
@@ -80,9 +78,8 @@ int fix_draw(int x, t_game *game, double distance)
 		curr_hit_down += hit_y ;
 		step--;
 	}
-	return 0;
+	return (0);
 }
-
 
 int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 {
@@ -94,6 +91,7 @@ int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 	double	curr_x;
 	double	curr_y;
 	int		i;
+
 	dx = x2 - x1;
 	dy = y2 - y1;
 	if (abs((int)dx) > abs((int)dy))
@@ -128,6 +126,7 @@ int	key_press(int keycode, t_game *game)
 		game->key[keycode] = 1;
 	return (0);
 }
+
 int	key_release(int keycode, t_game *game)
 {
 	if (keycode == 65363)
@@ -140,11 +139,10 @@ int	key_release(int keycode, t_game *game)
 	return (0);
 }
 
-
 int is_wall(t_game *game, int x, int y)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = x / 100;
 	j = y / 100;
@@ -153,20 +151,20 @@ int is_wall(t_game *game, int x, int y)
 	if (game->map[j] && game->map[j][i])
 	{
 		if (game->map[j][i] == '1')
-		{
 			return (1);
-		}
 	}
 	return (0);
 }
 
-
 int	calc_darkness(double dst, int color)
 {
-	int r = color / 256 / 256;
-	int g = (color / 256) % 256;
-	int b = color % 256;
+	int r;
+	int g;
+	int b;
 
+	r = color / 256 / 256;
+	g = (color / 256) % 256;
+	b = color % 256;
 	r = r - (dst / 4);
 	g = g - (dst / 4);
 	b = b - (dst / 4);
@@ -185,8 +183,7 @@ int	calc_darkness(double dst, int color)
 	return (r * 256 * 256 + g * 256 + b);
 }
 
-
-void ray_cast(t_game *game)
+void	ray_cast(t_game *game)
 {
 	double view = game->view;
 	double min = view - 30; 
@@ -197,6 +194,7 @@ void ray_cast(t_game *game)
 	int y_start;
 	int y_end;
 	double ray_angle;
+
 	while (ray++ < 1280)
 	{
 		ray_angle = min + ray * angle_step;
@@ -209,14 +207,13 @@ void ray_cast(t_game *game)
 		game->distance = game->distance * cos(rad(ca));
 		line_height = (int)((100 * 720 ) / game->distance);
 		y_start = (720 / 2) - ((line_height ) / 2);
-		y_end = (720 / 2) + ((line_height ) / 2);		
+		y_end = (720 / 2) + ((line_height ) / 2);
 		game->hit_p_y = y_end - y_start;
 		fix_draw(ray, game, game->distance);
 		draw_line_simple(ray, 720, ray, y_end, game, game->floor_color);
 		draw_line_simple(ray, 0, ray, y_start, game, game->ceiling_color);
 	}
 }
-
 
 int	move(t_game *game)
 {
@@ -246,6 +243,7 @@ void	game_init(t_game *game)
 	game->wall_e = new_file_img(game->east, game);
 	game->view = get_pv(game->pv);
 }
+
 int	win(t_game *game)
 {
 	free(game->key);
@@ -260,11 +258,12 @@ int	win(t_game *game)
 	free(game->mlx);
 	ft_free(game);
 	exit(0);
-	return(0);
+	return (0);
 }
-int main(int ac, char **av)
+
+int	main(int ac, char **av)
 {
-	t_game  *game;
+	t_game	*game;
 
 	if (ac != 2)
 		return (1);
@@ -283,5 +282,5 @@ int main(int ac, char **av)
 	mlx_put_image_to_window(game->mlx, game->win, game->back.img_ptr, 0, 0);
 	mlx_loop(game->mlx);
 	ft_free(game);
-	return(0);
+	return (0);
 }

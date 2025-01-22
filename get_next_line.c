@@ -1,4 +1,3 @@
-
 #include "cub.h"
 
 char	*my_check(char	*s)

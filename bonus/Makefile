@@ -4,13 +4,16 @@ CFLAGS = -Wall #-fsanitize=address -g3 #-Wextra -Werror
 FLAGS = -Lmlx_linux -lmlx_Linux -L./minilibx-linux/ -Imlx_linux -lXext -lX11 -lm -lz
 
 SRC = main.c \
-      parse_map.c \
-      get_next_line.c \
-      get_next_line_utils.c \
-      parsing.c \
-	  image.c\
-	  distance_calculation.c\
-	  animation.c\
+    parse_map.c \
+    get_next_line.c \
+    get_next_line_utils.c \
+    parsing.c \
+	parsing1.c \
+	parsing2.c \
+	parsing3.c \
+	image.c\
+	distance_calculation.c\
+	animation.c\
 
 OBJ = $(SRC:.c=.o)
 LIBFT = libft/libft.a

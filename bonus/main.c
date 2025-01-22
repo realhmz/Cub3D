@@ -1,6 +1,5 @@
 #include "cub.h"
 
-
 double	rad(double angle)
 {
 	return (angle * M_PI / 180);
@@ -32,31 +31,28 @@ void    ft_free(t_game *game)
 	free(game);
 }
 
-
 int get_wall_color(t_game *game, double curr_hit)
 {
 	int	color;
+
 	if (game->p_flag)
 	{
-		// printf("hit p  %d ,, cur %d\n",game->p_hit_p, curr_hit);
 		color =  get_pixel_img(game->player, game->p_hit_p,curr_hit);
 		return color;
 	}
 	if (game->side == 1)
-		return get_pixel_img(game->wall_w, game->hit_p, curr_hit);
+		return (get_pixel_img(game->wall_w, game->hit_p, curr_hit));
 	else if (game->side == 4)
-		return get_pixel_img(game->wall_s, game->hit_p, curr_hit);
+		return (get_pixel_img(game->wall_s, game->hit_p, curr_hit));
 	else if (game->side == 2)
-		return get_pixel_img(game->wall_e, game->hit_p, curr_hit);
+		return (get_pixel_img(game->wall_e, game->hit_p, curr_hit));
 	else if (game->side == 3)
-		return get_pixel_img(game->wall_n, game->hit_p, curr_hit);
+		return (get_pixel_img(game->wall_n, game->hit_p, curr_hit));
 	else if (game->side == 5)
 		return (get_pixel_img(game->door1, game->hit_p, curr_hit));
 	else if (game->side == 6)
-	{
-		 return get_pixel_img(game->miror, game->hit_p, curr_hit);
-	}
-	return 0;
+		return (get_pixel_img(game->miror, game->hit_p, curr_hit));
+	return (0);
 }
 
 int fix_draw(int x, int y1, int y2, t_game *game, double distance)
@@ -92,9 +88,8 @@ int fix_draw(int x, int y1, int y2, t_game *game, double distance)
 		curr_hit_down += hit_y ;
 		step--;
 	}
-	return 0;
+	return (0);
 }
-
 
 int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 {
@@ -106,6 +101,7 @@ int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 	double	curr_x;
 	double	curr_y;
 	int		i;
+
 	dx = x2 - x1;
 	dy = y2 - y1;
 	if (abs(dx) > abs(dy))
@@ -127,14 +123,12 @@ int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
 	return (500);
 }
 
-
 int	key_press(int keycode, t_game *game)
 {
 	if (keycode == 65363)
 		game->key[130] = 1;
 	if (keycode == 65361)
 		game->key[131] = 1;
-
 	if (keycode <= 127)
 		game->key[keycode] = 1;
 	return (0);
@@ -145,17 +139,15 @@ int	key_release(int keycode, t_game *game)
 		game->key[130] = 0;
 	if (keycode == 65361)
 		game->key[131] = 0;
-
 	if (keycode <= 127)
 		game->key[keycode] = 0;
 	return (0);
 }
 
-
 int is_wall(t_game *game, int x, int y)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = x / 100;
 	j = y / 100;
@@ -164,17 +156,15 @@ int is_wall(t_game *game, int x, int y)
 	if (game->map[j] && game->map[j][i])
 	{
 		if (game->map[j][i] == '1' || game->map[j][i] == 'D')
-		{
 			return (1);
-		}
 	}
 	return (0);
 }
 
 int is_door(t_game *game, int x, int y)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = x / 100;
 	j = y / 100;
@@ -183,20 +173,20 @@ int is_door(t_game *game, int x, int y)
 	if (game->map[j] && game->map[j][i])
 	{
 		if (game->map[j][i] == 'D')
-		{
 			return (1);
-		}
 	}
 	return (0);
 }
 
-
 int	calc_darkness_2d(t_game *game, double dst, int color)
 {
-	int r = color / 256 / 256;
-	int g = (color / 256) % 256;
-	int b = color % 256;
+	int r;
+	int g;
+	int b;
 
+	r = color / 256 / 256;
+	g = (color / 256) % 256;
+	b = color % 256;
 	r = r - (dst / 2);
 	g = g - (dst / 2);
 	b = g - (dst / 2);
@@ -217,10 +207,13 @@ int	calc_darkness_2d(t_game *game, double dst, int color)
 
 int	calc_darkness(t_game *game, double dst, int color)
 {
-	int r = color / 256 / 256;
-	int g = (color / 256) % 256;
-	int b = color % 256;
+	int r;
+	int g;
+	int b;
 
+	r = color / 256 / 256;
+	g = (color / 256) % 256;
+	b = color % 256;
 	r = r - (dst / 4);
 	g = g - (dst / 4);
 	b = b - (dst / 4);
@@ -239,7 +232,7 @@ int	calc_darkness(t_game *game, double dst, int color)
 	return (r * 256 * 256 + g * 256 + b);
 }
 
-void ray_cast(t_game *game)
+void	ray_cast(t_game *game)
 {
 	double view = game->view;
 	double min = view - 30; 
@@ -251,6 +244,7 @@ void ray_cast(t_game *game)
 	int y_start;
 	int y_end;
 	double ray_angle;
+
 	while (ray++ < 1280)
 	{
 		ray_angle = min + ray * angle_step;
@@ -263,19 +257,18 @@ void ray_cast(t_game *game)
 		game->distance = game->distance * cos(rad(ca));
 		x = ray * (1280 / 1280);
 		line_height = (int)((100 * 720 ) / game->distance);
-		y_start = (720 / 2) - ((line_height ) / 2) + game->movment_shake;;
-		y_end = (720 / 2) + ((line_height ) / 2) + game->movment_shake;;		
+		y_start = (720 / 2) - ((line_height ) / 2) + game->movment_shake;
+		y_end = (720 / 2) + ((line_height ) / 2) + game->movment_shake;		
 		game->hit_p_y = y_end - y_start;
 		if (y_start < 0) y_start = 0;
 		if (y_end < 1) y_end = 1;
 		if (y_end >= 720) y_end = 720 - 1;		
 		fix_draw(x, y_start, y_end, game, game->distance);
 		draw_line_simple(x, 720, x, y_end, game, game->floor_color);
-		// draw ceiling 
-		// draw_ceiling(x, y_start,game, ray_angle);
 		draw_line_simple(x, 0, x, y_start, game, game->ceiling_color);
 	}
 }
+
 int	move_front(t_game *game)
 {
 	if (game->key[119])
@@ -311,7 +304,8 @@ int	move_back(t_game *game)
 	}
 	return (0);
 }
-int move_right(t_game *game)
+
+int	move_right(t_game *game)
 {
 	if (game->key[100] && !is_wall(game, game->Px - round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view))), game->Py + round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view)))))
 	{
@@ -322,6 +316,7 @@ int move_right(t_game *game)
 	}
 	return (0);
 }
+
 int	move_left(t_game *game)
 {
 	if (game->key[97] && !is_wall(game, game->Px + round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view))), game->Py - round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view)))))
@@ -333,6 +328,7 @@ int	move_left(t_game *game)
 	}
 	return (0);
 }
+
 void	open_door(t_game *game)
 {
 	int	dst;
@@ -348,6 +344,7 @@ void	open_door(t_game *game)
 			game->map[y / 25][x / 25] = 'O';
 	}
 }
+
 void	player_moves(t_game *game)
 {
 	if (game->key[130])
@@ -375,11 +372,16 @@ void	player_moves(t_game *game)
 	else
 		game->movment_shake = 0;
 }
-void    draw_square(t_game *game, int x, int y, int color)
+
+void	draw_square(t_game *game, int x, int y, int color)
 {
-	int dst_y = y + 25;
-	int dst_x = x + 25;
-	int save_x = x;
+	int dst_y;
+	int dst_x;
+	int save_x;
+
+	dst_y = y + 25;
+	dst_x = x + 25;
+	save_x = x;
 	while (y <=  dst_y)
 	{
 		x = save_x;
@@ -390,18 +392,16 @@ void    draw_square(t_game *game, int x, int y, int color)
 		}
 		y++;
 	}
-	
 }
+
 void	render_player(t_game *game)
 {
-	// int	x;
-	// int	y;
 	int	save_x = 0, save_y = 0;
 	double	x;
 	double	y;
+	
 	x = game->Px / 4.0;
 	y = game->Py / 4.0;
-	// printf("px  %d , py  %d\n",x, y);
 	x += 0;
 	y += 0;
 	save_x = x;
@@ -417,6 +417,7 @@ void	render_player(t_game *game)
 		x++;
 	}
 }
+
 void	fill_map_frame(t_game *game)
 {
 	int	x;
@@ -432,14 +433,15 @@ void	fill_map_frame(t_game *game)
 			put_pixel_img(game->map_frame, x, y, 0x453321);
 			y++;
 		}
-		
 		x++;
 	}
 }
+
 void    render(t_game *game)
 {
-	int x = 0;
-	int y = 0;
+	int x;
+	int y;
+
 	y = 0;
 	while (game->map && game->map[y])
 	{
@@ -447,34 +449,29 @@ void    render(t_game *game)
 		while (game->map[y] && game->map[y][x])
 		{
 			if (game->map[y][x] == '1')
-			{
-				// draw_square(game, x * 25, y * 25, 0x284420);
 				put_img_to_img(game->mini_map, game->wall_n, x * 25, y * 25);
-			}
 			else if (game->map[y][x] == 'M')
-			{
 				draw_square(game, x * 25, y * 25, 0x747474);
-			}
 			else if (game->map[y][x] == 'D')
-			{
 				put_img_to_img(game->mini_map, game->door1, x * 25, y * 25);
-				// draw_square(game, x * 25, y * 25, 0xFFE199);
-			}
 			else if(game->map[y][x])
-			{
 				draw_square(game, x * 25, y * 25, 0x000001);
-			}
 			x++;
 		}
 		y++;
 	}
 	fill_map_frame(game);
 }
+
 int	end_point_2d(t_game *game, int view)
 {
-	int	i = 0;
-	int x = 0;
-	int y = 0;
+	int	i;
+	int x;
+	int y;
+
+	i = 0;
+	x = 0;
+	y = 0;
 	while (i < 60)
 	{
 		x = game->Px / 4  + i * cos(rad(view));
@@ -488,9 +485,13 @@ int	end_point_2d(t_game *game, int view)
 
 int	end_point_door(t_game *game, int view)
 {
-	int	i = 0;
-	int x = 0;
-	int y = 0;
+	int	i;
+	int x;
+	int y;
+
+	i = 0;
+	x = 0;
+	y = 0;
 	while (i < 20)
 	{
 		x = game->Px / 4  + i * cos(rad(view));
@@ -538,31 +539,38 @@ void	draw_line_2d(int x0, int y0, int x1, int y1, t_game *game, int color)
 
 void	ray_cast_2d(t_game *game)
 {
-	int	min = game->view - 25;
-	int color = 0xFFD700;
-	int max = game->view + 25;
+	int	min;
+	int color;
+	int max;
+	int new_x;
+	int new_y;
+
+	min = game->view - 25;
+	color = 0xFFD700;
+	max = game->view + 25;
 	while (min < max)
 	{
-		int new_x = (game->Px) / SCALE  + end_point_2d(game, min) * cos(rad(min));
-		int new_y = (game->Py)  / SCALE  + end_point_2d(game, min) * sin(rad(min));
+		new_x = (game->Px) / SCALE  + end_point_2d(game, min) * cos(rad(min));
+		new_y = (game->Py) / SCALE  + end_point_2d(game, min) * sin(rad(min));
 		min++;
-		draw_line_2d((game->Px + 15) / SCALE, (game->Py + 15) / SCALE, new_x, new_y, game, color);
-
+		draw_line_2d((game->Px + 15) / SCALE, (game->Py + 15)
+			/ SCALE, new_x, new_y, game, color);
 	}
 }
 
-
 void	update_player(t_game *game)
 {
-	int px = game->Px / 100;
-	int py = game->Py / 100;
+	int px;
+	int py;
 	static	int	is_door;
 	static	int	next_door;
+
+	px = game->Px / 100;
+	py = game->Py / 100;
 	if (px < 0 || px > game->map_width || py < 0 || py > game->map_height)
 		return;
 	if (game->map[py] && game->map[py][px])
 	{
-		// printf("x %d, y %d\n",px,py);
 		if (game->map[py][px] == 'D' || game->map[py][px] == 'O')
 			is_door = 1;
 		else
@@ -586,7 +594,6 @@ void	update_player(t_game *game)
 	}
 }
 
-
 int	move(t_game *game)
 {
 	player_moves(game);
@@ -608,6 +615,7 @@ int	move(t_game *game)
 	mlx_put_image_to_window(game->mlx, game->win, game->back.img_ptr, 0, 0);
 	return (0);
 }
+
 int	calc_map_h(char **map)
 {
 	int	i;
@@ -617,23 +625,27 @@ int	calc_map_h(char **map)
 		i++;
 	return (i);
 }
+
+// do we need this !!!!!!!!!!!!!!!!!!!!!!
 void	print_map(t_game *game)
 {
-	char **map;
+	char	**map;
+	int		y;
+
+	y = 0;
 	map = game->map;
-	int y = 0;
 	while (map && map[y])
 	{
 		printf("%s\n",map[y]);				
 		y++;
 	}
-	
 }
+
 int	max_width(char **map)
 {
 	int	i;
 	int	j;
-	int max;
+	int	max;
 
 	i = 0;
 	j = 0;
@@ -650,13 +662,14 @@ int	max_width(char **map)
 
 int	get_ceiling_color(int *rgb)
 {
-	int res;
+	int	res;
 
 	res = rgb[0] * 256 * 256;
 	res += rgb[1] * 256;
 	res += rgb[2];
 	return (res);
 }
+
 int	get_pv(char pv)
 {
 	int	res;
@@ -668,13 +681,10 @@ int	get_pv(char pv)
 	else if (pv == 'W')
 		res = 180;
 	else if (pv == 'E')
-	{
-		
 		res = 0;
-	}
-	
 	return (res);
 }
+
 void	game_init(t_game *game)
 {
 	game->ceiling_color = get_ceiling_color(game->ceiling);
@@ -694,9 +704,11 @@ void	game_init(t_game *game)
 	game->wall_e = new_file_img(game->east, game);
 	game->door1 = new_file_img("door1.xpm", game);
 }
-int main(int ac, char **av)
+
+int	main(int ac, char **av)
 {
-	t_game  *game;
+	t_game	*game;
+
 	if (ac != 2)
 		return (1);
 	game = parsing(av[1]);
@@ -709,10 +721,10 @@ int main(int ac, char **av)
 	game_init(game);
 	mlx_hook(game->win, 02, (1L << 0), key_press, game);
 	mlx_hook(game->win, 03, (1L << 1), key_release, game);
-	game->view = get_pv(game->PV);
+	game->view = get_pv(game->pv);
 	mlx_loop_hook(game->mlx, move, game);
 	mlx_put_image_to_window(game->mlx, game->win, game->back.img_ptr, 0, 0);
 	mlx_loop(game->mlx);
 	ft_free(game);
-	return(0);
+	return (0);
 }

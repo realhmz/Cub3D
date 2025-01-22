@@ -1,4 +1,3 @@
-
 #include "cub.h"
 
 int	fillemptyspace(t_game *game, int j, char *s)
@@ -15,13 +14,12 @@ int	fillemptyspace(t_game *game, int j, char *s)
 				s[i] = '1';
 			if (s[i] != '1' && s[i] != '0')
 			{
-				if (s[i] == 'D') ;
-				else if ((s[i] == 'N' || s[i] == 'S' || s[i] == 'W' || s[i] == 'E')
+				if ((s[i] == 'N' || s[i] == 'S' || s[i] == 'W' || s[i] == 'E')
 					&& !game->Px && !game->Py)
 				{
+					game->pv = s[i];
 					game->Px = i * TILE_SIZE + 25;
 					game->Py = j * TILE_SIZE + 25;
-					game->PV = s[i];
 				}
 				else
 					return (ft_putstr_fd("Error: invalid map\n", 2), false);
@@ -33,8 +31,8 @@ int	fillemptyspace(t_game *game, int j, char *s)
 
 bool	checkwall(char **map, int j)
 {
-	int size;
-	int len;
+	int	size;
+	int	len;
 
 	size = ft_strlen(map[j - 1]) - 1;
 	len = ft_strlen(map[j + 1]) - 1;
@@ -72,7 +70,7 @@ bool	closedmap(t_game *game, int len)
 					return (ft_putstr_fd("Error: invalid map\n", 2), false);
 		}
 		else
-			if (!checkwall(game->map, j))	
+			if (!checkwall(game->map, j))
 				return (ft_putstr_fd("Error: invalid map\n", 2), false);
 	}
 	return (true);
@@ -80,7 +78,8 @@ bool	closedmap(t_game *game, int len)
 
 bool	parse_map(t_game *game)
 {
-	int len;
+	int	len;
+
 	len = fillemptyspace(game, -1, NULL);
 	if (!len)
 		return (false);

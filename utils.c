@@ -9,11 +9,12 @@ int	calc_map_h(char **map)
 		i++;
 	return (i);
 }
+
 int	max_width(char **map)
 {
 	int	i;
 	int	j;
-	int max;
+	int	max;
 
 	i = 0;
 	j = 0;
@@ -30,13 +31,14 @@ int	max_width(char **map)
 
 int	get_ceiling_color(int *rgb)
 {
-	int res;
+	int	res;
 
 	res = rgb[0] * 256 * 256;
 	res += rgb[1] * 256;
 	res += rgb[2];
 	return (res);
 }
+
 int	get_pv(char pv)
 {
 	int	res;
