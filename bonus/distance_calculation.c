@@ -1,7 +1,23 @@
 #include "cub.h"
 
+void	dda_vars_init2(t_dda *vars)
+{
+	if (vars->ray_dir_y < 0)
+		vars->step_y = -1;
+	else
+		vars->step_y = 1;
 
-
+	if (vars->ray_dir_x < 0)
+		vars->sidedist_x = (vars->pos_x - vars->map_x) * vars->deltadist_x;
+	else
+		vars->sidedist_x = (vars->map_x + 1.0 - vars->pos_x) * vars->deltadist_x;
+	if (vars->ray_dir_y < 0)
+		vars->sidedist_y = (vars->pos_y - vars->map_y) * vars->deltadist_y;
+	else
+		vars->sidedist_y = (vars->map_y + 1.0 - vars->pos_y) * vars->deltadist_y;
+	vars->hit = 0;
+	vars->i = 0;
+}
 void	dda_vars_init(t_game *game, double view, t_dda *vars)
 {
 	vars->ray_dir_x = cos(rad(view));
@@ -24,22 +40,7 @@ void	dda_vars_init(t_game *game, double view, t_dda *vars)
 		vars->step_x = -1;
 	else
 		vars->step_x = 1;
-	if (vars->ray_dir_y < 0)
-		vars->step_y = -1;
-	else
-		vars->step_y = 1;
-
-	if (vars->ray_dir_x < 0)
-		vars->sidedist_x = (vars->pos_x - vars->map_x) * vars->deltadist_x;
-	else
-		vars->sidedist_x = (vars->map_x + 1.0 - vars->pos_x) * vars->deltadist_x;
-	if (vars->ray_dir_y < 0)
-		vars->sidedist_y = (vars->pos_y - vars->map_y) * vars->deltadist_y;
-	else
-		vars->sidedist_y = (vars->map_y + 1.0 - vars->pos_y) * vars->deltadist_y;
-
-	vars->hit = 0;
-	vars->i = 0;
+	dda_vars_init2(vars);
 }
 
 void	dda_vars_init_mir(t_game *game, double view, t_dda *vars)
