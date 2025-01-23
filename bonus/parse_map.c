@@ -85,5 +85,7 @@ bool	parse_map(t_game *game)
 		return (false);
 	if (!closedmap(game, len))
 		return (false);
+	if (!game->pv)
+		return (false);
 	return (true);
 }

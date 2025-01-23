@@ -1,4 +1,3 @@
-
 #include "cub.h"
 
 int	fillemptyspace(t_game *game, int j, char *s)
@@ -85,6 +84,8 @@ bool	parse_map(t_game *game)
 	if (!len)
 		return (false);
 	if (!closedmap(game, len))
+		return (false);
+	if (!game->pv)
 		return (false);
 	return (true);
 }

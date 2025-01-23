@@ -139,13 +139,12 @@ int	key_release(int keycode, t_game *game)
 		game->key[130] = 0;
 	if (keycode == 65361)
 		game->key[131] = 0;
-
 	if (keycode <= 127)
 		game->key[keycode] = 0;
 	return (0);
 }
 
-int is_wall(t_game *game, int x, int y)
+int	is_wall(t_game *game, int x, int y)
 {
 	int	i;
 	int	j;
@@ -164,9 +163,9 @@ int is_wall(t_game *game, int x, int y)
 
 int	calc_darkness(double dst, int color)
 {
-	int r;
-	int g;
-	int b;
+	int	r;
+	int	g;
+	int	b;
 
 	r = color / 256 / 256;
 	g = (color / 256) % 256;
@@ -188,10 +187,11 @@ int	calc_darkness(double dst, int color)
 		b = 255;
 	return (r * 256 * 256 + g * 256 + b);
 }
+
 void	ray_init(t_game *game, t_ray *ray)
 {
 	ray->view = game->view;
-	ray->min = ray->view - 30; 
+	ray->min = ray->view - 30;
 	ray->angle_step = 60.0 / 1280;
 	ray->ca = ray->view - ray->min;
 	ray->ray = 0;
@@ -200,6 +200,7 @@ void	ray_init(t_game *game, t_ray *ray)
 	ray->y_end = 0;
 	ray->ray_angle = 0;
 }
+
 void	ray_cast(t_game *game)
 {
 	t_ray	ray;
@@ -215,9 +216,9 @@ void	ray_cast(t_game *game)
 		if (ray.ca > 360)
 			ray.ca = ray.ca - 360;
 		game->distance = game->distance * cos(rad(ray.ca));
-		ray.line_height = (int)((100 * 720 ) / game->distance);
-		ray.y_start = (720 / 2) - ((ray.line_height ) / 2);
-		ray.y_end = (720 / 2) + ((ray.line_height ) / 2);
+		ray.line_height = (int)(100 * 720 / game->distance);
+		ray.y_start = (720 / 2) - (ray.line_height / 2);
+		ray.y_end = (720 / 2) + (ray.line_height / 2);
 		game->hit_p_y = ray.y_end - ray.y_start;
 		fix_draw(ray.ray, game, game->distance);
 		game->color = game->floor_color;
@@ -233,7 +234,7 @@ int	move(t_game *game)
 	mlx_destroy_image(game->mlx, game->back.img_ptr);
 	game->back = new_img(1280, 720, game);
 	ray_cast(game);
-	put_img_to_img(game->back, game->gun, 666, 450 );
+	put_img_to_img(game->back, game->gun, 666, 450);
 	mlx_put_image_to_window(game->mlx, game->win, game->back.img_ptr, 0, 0);
 	return (0);
 }

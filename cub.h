@@ -137,7 +137,7 @@ char			*my_strjoin(char *s1, char const *s2);
 char			*get_next_line(int fd, bool flag);
 
 bool	space_checker(char c);
-bool	check_var(char *str);
+bool	check_var(char *str, t_game *game);
 bool	save_checker(t_game *game, bool flag, char c);
 bool	afterline(char *line, int i);
 bool	path_checker(t_game *game, char *var, char *line, int i);

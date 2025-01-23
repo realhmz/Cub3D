@@ -7,19 +7,21 @@ bool	space_checker(char c)
 	return (0);
 }
 
-bool	check_var(char *str)
+bool	check_var(char *str, t_game *game)
 {
-	if (!ft_strncmp(str, "NO", 2) && ft_strlen(str) == 2)
+	if (!ft_strncmp(str, "NO", 2) && ft_strlen(str) == 2 && !game->north)
 		return (true);
-	if (!ft_strncmp(str, "SO", 2) && ft_strlen(str) == 2)
+	if (!ft_strncmp(str, "SO", 2) && ft_strlen(str) == 2 && !game->south)
 		return (true);
-	if (!ft_strncmp(str, "WE", 2) && ft_strlen(str) == 2)
+	if (!ft_strncmp(str, "WE", 2) && ft_strlen(str) == 2 && !game->west)
 		return (true);
-	if (!ft_strncmp(str, "EA", 2) && ft_strlen(str) == 2)
+	if (!ft_strncmp(str, "EA", 2) && ft_strlen(str) == 2 && !game->east)
 		return (true);
-	if (!ft_strncmp(str, "F", 1) && ft_strlen(str) == 1)
+	if (!ft_strncmp(str, "F", 1) && ft_strlen(str) == 1
+		&& game->floor[0] == -1)
 		return (true);
-	if (!ft_strncmp(str, "C", 1) && ft_strlen(str) == 1)
+	if (!ft_strncmp(str, "C", 1) && ft_strlen(str) == 1
+		&& game->ceiling[0] == -1)
 		return (true);
 	ft_putstr_fd("ERROR : a non valid element detected\n", 2);
 	return (false);
