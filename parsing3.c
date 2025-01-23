@@ -4,7 +4,7 @@ bool	handle_str(t_game *game, char *str, char *line, int i)
 {
 	if (searchar(line))
 		return (true);
-	if (!check_var(str))
+	if (!check_var(str, game))
 		return (false);
 	if (!put_val(game, str, line, i))
 		return (false);
