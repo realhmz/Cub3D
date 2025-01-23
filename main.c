@@ -31,9 +31,8 @@ void	ft_free(t_game *game)
 	free(game);
 }
 
-int get_wall_color(t_game *game, double curr_hit)
+int	get_wall_color(t_game *game, double curr_hit)
 {
-	
 	if (game->side == 1)
 		return (get_pixel_img(game->wall_w, game->hit_p, curr_hit));
 	else if (game->side == 4)
@@ -45,69 +44,77 @@ int get_wall_color(t_game *game, double curr_hit)
 	return (0);
 }
 
-int fix_draw(int x, t_game *game, double distance)
+void	fix_init(t_game *game, t_fix *fix)
 {
-	double step = 720 / 2;
-	double inc_y = 1.0;
-	double mid_y = 720 / 2 ;
-	double curr_y_up = mid_y;
-	double curr_y_down = mid_y;
-	double visible_height = game->hit_p_y;
-	double hit_y = 100.0 / visible_height;
-	double tex_start = 50.0;
-	double curr_hit_up = tex_start;
-	double curr_hit_down = tex_start;
+	fix->step = 720 / 2;
+	fix->inc_y = 1.0;
+	fix->mid_y = 720 / 2 ;
+	fix->curr_y_up = fix->mid_y;
+	fix->curr_y_down = fix->mid_y;
+	fix->visible_height = game->hit_p_y;
+	fix->hit_y = 100.0 / fix->visible_height;
+	fix->tex_start = 50.0;
+	fix->hit_up = fix->tex_start;
+	fix->hit_down = fix->tex_start;
+	fix->color = 0;
+}
 
-	while (step > 0)
+int	fix_draw(int x, t_game *game, double distance)
+{
+	t_fix	fix;
+
+	fix_init(game, &fix);
+	while (fix.step > 0)
 	{
-		if (curr_y_up >= 0 && curr_hit_up >= 0 && curr_hit_up <= 100)
+		if (fix.curr_y_up >= 0 && fix.hit_up >= 0 && fix.hit_up <= 100)
 		{
-			int color = get_wall_color(game, curr_hit_up);
-			color = calc_darkness(distance, color);
-			put_pixel_img(game->back, x, (int)curr_y_up, color);
+			fix.color = get_wall_color(game, fix.hit_up);
+			fix.color = calc_darkness(distance, fix.color);
+			put_pixel_img(game->back, x, (int)fix.curr_y_up, fix.color);
 		}
-		if (curr_y_down < 720 && curr_hit_down >= 0 && curr_hit_down <= 100)
+		if (fix.curr_y_down < 720 && fix.hit_down >= 0 && fix.hit_down <= 100)
 		{
-			int color = get_wall_color(game, curr_hit_down);
-			color = calc_darkness(distance, color);
-			put_pixel_img(game->back, x, (int)curr_y_down, color);
+			fix.color = get_wall_color(game, fix.hit_down);
+			fix.color = calc_darkness(distance, fix.color);
+			put_pixel_img(game->back, x, (int)fix.curr_y_down, fix.color);
 		}
-		curr_y_up -= inc_y;
-		curr_y_down += inc_y;
-		curr_hit_up -= hit_y ;
-		curr_hit_down += hit_y ;
-		step--;
+		fix.curr_y_up -= fix.inc_y;
+		fix.curr_y_down += fix.inc_y;
+		fix.hit_up -= fix.hit_y ;
+		fix.hit_down += fix.hit_y ;
+		fix.step--;
 	}
 	return (0);
 }
 
-int	draw_line_simple(int x1, int y1, int x2, int y2,t_game *game, int color)
+void	line_init(t_line *line, int x1, int y1, int y2)
 {
-	double	step;
-	double	dx;
-	double	dy;
-	double	inc_x;
-	double	inc_y;
-	double	curr_x;
-	double	curr_y;
-	int		i;
-
-	dx = x2 - x1;
-	dy = y2 - y1;
-	if (abs((int)dx) > abs((int)dy))
-		step = abs((int)dx);
+	line->dx = x1 - x1;
+	line->dy = y2 - y1;
+	if (abs((int)line->dx) > abs((int)line->dy))
+		line->step = abs((int)line->dx);
 	else
-		step = abs((int)dy);
-	inc_x = dx / step;
-	inc_y = dy / step;
-	curr_x = x1;
-	curr_y = y1;
+		line->step = abs((int)line->dy);
+	line->inc_x = line->dx / line->step;
+	line->inc_y = line->dy / line->step;
+	line->curr_x = x1;
+	line->curr_y = y1;
+}
+
+int	draw_line_simple(int x1, int y1, int y2, t_game *game)
+{
+	t_line	line;
+	int		i;
+	int		color;
+
+	line_init(&line, x1, y1, y2);
 	i = 0;
-	while (i <= step)
+	while (i <= line.step)
 	{
-		put_pixel_img(game->back, (int)curr_x, (int)curr_y,calc_darkness(i * 1.5, color));
-		curr_x += inc_x;
-		curr_y += inc_y;
+		color = calc_darkness(i * 1.5, game->color);
+		put_pixel_img(game->back, (int)line.curr_x, (int)line.curr_y, color);
+		line.curr_x += line.inc_x;
+		line.curr_y += line.inc_y;
 		i++;
 	}
 	return (500);
@@ -121,7 +128,6 @@ int	key_press(int keycode, t_game *game)
 		game->key[130] = 1;
 	if (keycode == 65361)
 		game->key[131] = 1;
-
 	if (keycode <= 127)
 		game->key[keycode] = 1;
 	return (0);
@@ -182,36 +188,42 @@ int	calc_darkness(double dst, int color)
 		b = 255;
 	return (r * 256 * 256 + g * 256 + b);
 }
-
+void	ray_init(t_game *game, t_ray *ray)
+{
+	ray->view = game->view;
+	ray->min = ray->view - 30; 
+	ray->angle_step = 60.0 / 1280;
+	ray->ca = ray->view - ray->min;
+	ray->ray = 0;
+	ray->line_height = 0;
+	ray->y_start = 0;
+	ray->y_end = 0;
+	ray->ray_angle = 0;
+}
 void	ray_cast(t_game *game)
 {
-	double view = game->view;
-	double min = view - 30; 
-	double angle_step = 60.0 / 1280;
-	float ca = view - min;
-	int ray = 0;
-	int line_height;
-	int y_start;
-	int y_end;
-	double ray_angle;
+	t_ray	ray;
 
-	while (ray++ < 1280)
+	ray_init(game, &ray);
+	while (ray.ray++ < 1280)
 	{
-		ray_angle = min + ray * angle_step;
-		game->distance = end_point(game, ray_angle);
-		ca = view - ray_angle;
-		if (ca < 0)
-			ca = 360 + ca;
-		if (ca > 360)
-			ca = ca - 360;
-		game->distance = game->distance * cos(rad(ca));
-		line_height = (int)((100 * 720 ) / game->distance);
-		y_start = (720 / 2) - ((line_height ) / 2);
-		y_end = (720 / 2) + ((line_height ) / 2);
-		game->hit_p_y = y_end - y_start;
-		fix_draw(ray, game, game->distance);
-		draw_line_simple(ray, 720, ray, y_end, game, game->floor_color);
-		draw_line_simple(ray, 0, ray, y_start, game, game->ceiling_color);
+		ray.ray_angle = ray.min + ray.ray * ray.angle_step;
+		game->distance = end_point(game, ray.ray_angle);
+		ray.ca = ray.view - ray.ray_angle;
+		if (ray.ca < 0)
+			ray.ca = 360 + ray.ca;
+		if (ray.ca > 360)
+			ray.ca = ray.ca - 360;
+		game->distance = game->distance * cos(rad(ray.ca));
+		ray.line_height = (int)((100 * 720 ) / game->distance);
+		ray.y_start = (720 / 2) - ((ray.line_height ) / 2);
+		ray.y_end = (720 / 2) + ((ray.line_height ) / 2);
+		game->hit_p_y = ray.y_end - ray.y_start;
+		fix_draw(ray.ray, game, game->distance);
+		game->color = game->floor_color;
+		draw_line_simple(ray.ray, 720, ray.y_end, game);
+		game->color = game->ceiling_color;
+		draw_line_simple(ray.ray, 0, ray.y_start, game);
 	}
 }
 

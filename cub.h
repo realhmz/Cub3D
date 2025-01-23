@@ -36,6 +36,22 @@ typedef struct s_img
 	void	*win;
 }	t_img;
 
+typedef	struct s_fix
+{
+	double	step;
+	double	inc_y;
+	double	mid_y;
+	double	curr_y_up;
+	double	curr_y_down;
+	double	visible_height;
+	double	hit_y;
+	double	tex_start;
+	double	hit_up;
+	double	hit_down;
+	int		color;
+} t_fix;
+
+
 typedef struct s_dda
 {
 	double	ray_dir_x;
@@ -54,6 +70,30 @@ typedef struct s_dda
 	int		side;
 	int		i;
 }   t_dda;
+
+typedef struct s_line
+{
+	double	step;
+	double	dx;
+	double	dy;
+	double	inc_x;
+	double	inc_y;
+	double	curr_x;
+	double	curr_y;
+}	t_line;
+
+typedef struct s_ray
+{
+	double view;
+	double min; 
+	double angle_step;
+	float ca;
+	int ray;
+	int line_height;
+	int y_start;
+	int y_end;
+	double ray_angle;
+}		t_ray;
 
 typedef struct s_game
 {
@@ -80,6 +120,7 @@ typedef struct s_game
 	double	hit_p_y;
 	double	distance;
 	int		side;
+	int		color;
 	t_img	back;
 	t_img	gun;
 	t_img	wall_w;
@@ -137,6 +178,7 @@ int	get_ceiling_color(int *rgb);
 int	get_pv(char pv);
 //moves
 int is_wall(t_game *game, int x, int y);
+int	draw_line_simple(int x1, int y1, int y2,t_game *game);
 void	player_moves(t_game *game);
 int	win(t_game *game);
 #endif
