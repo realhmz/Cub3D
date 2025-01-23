@@ -19,6 +19,22 @@ int	is_wall_p(t_game *game, double x, double y)
 	return (0);
 }
 
+void	dda_vars_init2(t_dda *vars)
+{
+	if (vars->ray_dir_x < 0)
+		vars->sidedist_x = (vars->pos_x - vars->map_x) * vars->deltadist_x;
+	else
+		vars->sidedist_x
+			= (vars->map_x + 1.0 - vars->pos_x) * vars->deltadist_x;
+	if (vars->ray_dir_y < 0)
+		vars->sidedist_y = (vars->pos_y - vars->map_y) * vars->deltadist_y;
+	else
+		vars->sidedist_y
+			= (vars->map_y + 1.0 - vars->pos_y) * vars->deltadist_y;
+	vars->hit = 0;
+	vars->i = 0;
+}
+
 void	dda_vars_init(t_game *game, double view, t_dda *vars)
 {
 	vars->ray_dir_x = cos(rad(view));
@@ -43,16 +59,7 @@ void	dda_vars_init(t_game *game, double view, t_dda *vars)
 		vars->step_y = -1;
 	else
 		vars->step_y = 1;
-	if (vars->ray_dir_x < 0)
-		vars->sidedist_x = (vars->pos_x - vars->map_x) * vars->deltadist_x;
-	else
-		vars->sidedist_x = (vars->map_x + 1.0 - vars->pos_x) * vars->deltadist_x;
-	if (vars->ray_dir_y < 0)
-		vars->sidedist_y = (vars->pos_y - vars->map_y) * vars->deltadist_y;
-	else
-		vars->sidedist_y = (vars->map_y + 1.0 - vars->pos_y) * vars->deltadist_y;
-	vars->hit = 0;
-	vars->i = 0;
+	dda_vars_init2(vars);
 }
 
 double	end_point_while(t_game *game, t_dda *vars)
