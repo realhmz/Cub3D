@@ -86,6 +86,6 @@ bool	parse_map(t_game *game)
 	if (!closedmap(game, len))
 		return (false);
 	if (!game->pv)
-		return (false);
+		return (perror("Error: Player is not exist\n"), false);
 	return (true);
 }

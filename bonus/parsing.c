@@ -8,7 +8,7 @@ t_list	*parse_args(t_game *game, char *arg, t_list *lst)
 	fd = open(arg, O_RDONLY);
 	line = get_next_line(fd, 0);
 	if (!line)
-		return (get_next_line(fd, 1), NULL);
+		return (perror("Error\n"), get_next_line(fd, 1), NULL);
 	while (line && !save_checker(game, 0, 0))
 	{
 		if (!fillin_data(game, line))
