@@ -171,6 +171,7 @@ t_img			new_img(int w, int h, t_game *game);
 int				calc_darkness(double distance, int color);
 double			end_point(t_game *game, double view);
 double			rad(double angle);
+int	get_wall_color(t_game *game, double curr_hit);
 //utils
 int	calc_map_h(char **map);
 int	max_width(char **map);

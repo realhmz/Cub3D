@@ -16,6 +16,8 @@ SRC = main.c \
 	  dist_cal.c\
 	  utils.c\
 	  move.c\
+	  move2.c\
+	  ray_cast.c\
 
 OBJ = $(SRC:.c=.o)
 LIBFT = libft/libft.a
