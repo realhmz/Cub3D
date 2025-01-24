@@ -33,13 +33,6 @@ void    ft_free(t_game *game)
 
 int get_wall_color(t_game *game, double curr_hit)
 {
-	int	color;
-
-	if (game->p_flag)
-	{
-		color =  get_pixel_img(game->player, game->p_hit_p,curr_hit);
-		return color;
-	}
 	if (game->side == 1)
 		return (get_pixel_img(game->wall_w, game->hit_p, curr_hit));
 	else if (game->side == 4)
@@ -50,8 +43,6 @@ int get_wall_color(t_game *game, double curr_hit)
 		return (get_pixel_img(game->wall_n, game->hit_p, curr_hit));
 	else if (game->side == 5)
 		return (get_pixel_img(game->door1, game->hit_p, curr_hit));
-	else if (game->side == 6)
-		return (get_pixel_img(game->miror, game->hit_p, curr_hit));
 	return (0);
 }
 
@@ -287,7 +278,6 @@ void	ray_cast(t_game *game)
 		draw_line_simple(x, 0, x, y_start, game, game->ceiling_color);
 	}
 }
-
 
 int	move_front(t_game *game)
 {
@@ -645,21 +635,6 @@ int	calc_map_h(char **map)
 	while (map && map[i])
 		i++;
 	return (i);
-}
-
-// do we need this !!!!!!!!!!!!!!!!!!!!!!
-void	print_map(t_game *game)
-{
-	char	**map;
-	int		y;
-
-	y = 0;
-	map = game->map;
-	while (map && map[y])
-	{
-		printf("%s\n",map[y]);				
-		y++;
-	}
 }
 
 int	max_width(char **map)

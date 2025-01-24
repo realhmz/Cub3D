@@ -6,18 +6,20 @@ void	dda_vars_init2(t_dda *vars)
 		vars->step_y = -1;
 	else
 		vars->step_y = 1;
-
 	if (vars->ray_dir_x < 0)
 		vars->sidedist_x = (vars->pos_x - vars->map_x) * vars->deltadist_x;
 	else
-		vars->sidedist_x = (vars->map_x + 1.0 - vars->pos_x) * vars->deltadist_x;
+		vars->sidedist_x
+			= (vars->map_x + 1.0 - vars->pos_x) * vars->deltadist_x;
 	if (vars->ray_dir_y < 0)
 		vars->sidedist_y = (vars->pos_y - vars->map_y) * vars->deltadist_y;
 	else
-		vars->sidedist_y = (vars->map_y + 1.0 - vars->pos_y) * vars->deltadist_y;
+		vars->sidedist_y
+			= (vars->map_y + 1.0 - vars->pos_y) * vars->deltadist_y;
 	vars->hit = 0;
 	vars->i = 0;
 }
+
 void	dda_vars_init(t_game *game, double view, t_dda *vars)
 {
 	vars->ray_dir_x = cos(rad(view));
@@ -82,59 +84,61 @@ void	dda_vars_init_mir(t_game *game, double view, t_dda *vars)
 	vars->hit = 0;
 	vars->i = 0;
 }
+
 double	end_point_while(t_game *game, t_dda *vars)
 {
-	const double MIN_WALL_DIST = 0.1;
-	 if (vars->sidedist_x <vars->sidedist_y)
-		{
-			vars->sidedist_x += vars->deltadist_x;
-			vars->map_x += vars->step_x;
-			vars->side = 0;
-		}
-		else
-		{
-			vars->sidedist_y += vars->deltadist_y;
-			vars->map_y += vars->step_y;
-			vars->side = 1;
-		}
-		if (vars->map_x < 0 || vars->map_y < 0 || 
-			vars->map_x >= game->map_width || 
-			vars->map_y >= game->map_height)
-			return MIN_WALL_DIST * 100;
+	double min_wall_dist;
+
+	min_wall_dist = 0.1;
+	if (vars->sidedist_x <vars->sidedist_y)
+	{
+		vars->sidedist_x += vars->deltadist_x;
+		vars->map_x += vars->step_x;
+		vars->side = 0;
+	}
+	else
+	{
+		vars->sidedist_y += vars->deltadist_y;
+		vars->map_y += vars->step_y;
+		vars->side = 1;
+	}
+	if (vars->map_x < 0 || vars->map_y < 0 || 
+		vars->map_x >= game->map_width || 
+		vars->map_y >= game->map_height)
+		return (min_wall_dist * 100);
 	return (0);
 }
+
 double	end_point_while2(t_game *game, t_dda *vars)
 {
-	const double MIN_WALL_DIST = 0.1;
+	double min_wall_dist;
+	double dist;
+
+	min_wall_dist = 0.1;
 	if (game->map[vars->map_y][vars->map_x] == '1')
 	{
-		double dist;
-		
 		if (vars->side == 0)
 			dist = vars->sidedist_x - vars->deltadist_x;
 		else
 			dist = vars->sidedist_y - vars->deltadist_y;
-			
-		if (dist < MIN_WALL_DIST)
-			return MIN_WALL_DIST * 100;
+		if (dist < min_wall_dist)
+			return (min_wall_dist * 100);
 		vars->hit = 1;
 	}
 	else if (game->map[vars->map_y][vars->map_x] == 'D')
 	{
-		double dist;
-
 		game->side = 5;
 		if (vars->side == 0)
 			dist = vars->sidedist_x - vars->deltadist_x;
 		else
 			dist = vars->sidedist_y - vars->deltadist_y;
-			
-		if (dist < MIN_WALL_DIST)
-			return MIN_WALL_DIST * 100;
+		if (dist < min_wall_dist)
+			return (min_wall_dist * 100);
 		vars->hit = 1	;
 	}
 	return (0);
 }
+
 static double	get_wall_hit(t_game *game, double wall_x, int step, int side)
 {
 	if (side == 0)

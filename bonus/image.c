@@ -24,13 +24,11 @@ t_img	new_file_img(char *path, t_game *game)
 	if (!image.img_ptr)
 		write(2, "File could not be read\n", 23);
 	else
-		image.addr = mlx_get_data_addr(image.img_ptr, &(image.bpp),
-				&(image.line_len), &(image.endian));
+		image.addr = mlx_get_data_addr(image.img_ptr,
+				&(image.bpp), &(image.line_len), &(image.endian));
 	i++;
 	return (image);
 }
-
-
 
 void	put_pixel_img(t_img img, int x, int y, int color)
 {
@@ -53,7 +51,7 @@ unsigned int	get_pixel_img(t_img img, int x, int y)
 		y = y % img.h;
 	if (x < 0)
 		x = 0;
-	if ( y < 0)
+	if (y < 0)
 		y = 0;
 	return (*(unsigned int *)((img.addr + (y * img.line_len) + (x * img.bpp / 8))));
 }

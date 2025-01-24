@@ -1,5 +1,5 @@
 NAME = cub3d
-CC = gcc
+CC = cc
 CFLAGS = -Wall #-fsanitize=address -g3 #-Wextra -Werror
 FLAGS = -Lmlx_linux -lmlx_Linux -L./minilibx-linux/ -Imlx_linux -lXext -lX11 -lm -lz
 
