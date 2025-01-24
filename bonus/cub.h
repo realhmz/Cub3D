@@ -93,8 +93,8 @@ typedef struct s_game
 	char	*key;
     float     view;
     char    pv;
-    int     Px;
-    int     Py;
+    int     px;
+    int     py;
     int     map_width;
     int     map_height;
     double  hit_p;

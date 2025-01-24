@@ -39,8 +39,8 @@ void	dda_vars_init(t_game *game, double view, t_dda *vars)
 {
 	vars->ray_dir_x = cos(rad(view));
 	vars->ray_dir_y = sin(rad(view));
-	vars->pos_x = game->Px / 100.0;
-	vars->pos_y = game->Py / 100.0;
+	vars->pos_x = game->px / 100.0;
+	vars->pos_y = game->py / 100.0;
 	vars->map_x = (int)vars->pos_x;
 	vars->map_y = (int)vars->pos_y;
 	if (vars->ray_dir_x == 0)

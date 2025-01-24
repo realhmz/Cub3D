@@ -293,14 +293,14 @@ int	move_front(t_game *game)
 {
 	if (game->key[119])
 	{
-		if (!is_wall(game, game->Px + round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view))), game->Py + round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view)))))
+		if (!is_wall(game, game->px + round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view))), game->py + round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view)))))
 		{
-			if (!is_wall(game, game->Px + round(MOVE_SPEED * cos(rad(game->view + 30))), game->Py + round(MOVE_SPEED * sin(rad(game->view + 30)))))
+			if (!is_wall(game, game->px + round(MOVE_SPEED * cos(rad(game->view + 30))), game->py + round(MOVE_SPEED * sin(rad(game->view + 30)))))
 			{
-				if (!is_wall(game, game->Px + round(MOVE_SPEED * cos(rad(game->view - 30))), game->Py + round(MOVE_SPEED * sin(rad(game->view - 30)))))
+				if (!is_wall(game, game->px + round(MOVE_SPEED * cos(rad(game->view - 30))), game->py + round(MOVE_SPEED * sin(rad(game->view - 30)))))
 				{
-					game->Py += round(MOVE_SPEED * sin(rad(game->view)));
-					game->Px += round(MOVE_SPEED * cos(rad(game->view)));
+					game->py += round(MOVE_SPEED * sin(rad(game->view)));
+					game->px += round(MOVE_SPEED * cos(rad(game->view)));
 					game->is_moving = 1;
 
 					return (1);
@@ -315,10 +315,10 @@ int	move_back(t_game *game)
 {
 	if (game->key[115])
 	{
-		if (!is_wall(game, game->Px - round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view))), game->Py - round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view)))))
+		if (!is_wall(game, game->px - round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view))), game->py - round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view)))))
 		{
-			game->Py -= round(MOVE_SPEED * sin(rad(game->view)));
-			game->Px -= round(MOVE_SPEED * cos(rad(game->view)));
+			game->py -= round(MOVE_SPEED * sin(rad(game->view)));
+			game->px -= round(MOVE_SPEED * cos(rad(game->view)));
 			game->is_moving = 1;
 			return (1);
 		}
@@ -328,11 +328,11 @@ int	move_back(t_game *game)
 
 int	move_right(t_game *game)
 {
-	if (game->key[100] && !is_wall(game, game->Px - round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view))), game->Py + round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view)))))
+	if (game->key[100] && !is_wall(game, game->px - round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view))), game->py + round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view)))))
 	{
 		game->is_moving = 1;
-		game->Px -= round(MOVE_SPEED * sin(rad(game->view)));
-		game->Py += round(MOVE_SPEED * cos(rad(game->view)));
+		game->px -= round(MOVE_SPEED * sin(rad(game->view)));
+		game->py += round(MOVE_SPEED * cos(rad(game->view)));
 		return (1);
 	}
 	return (0);
@@ -340,11 +340,11 @@ int	move_right(t_game *game)
 
 int	move_left(t_game *game)
 {
-	if (game->key[97] && !is_wall(game, game->Px + round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view))), game->Py - round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view)))))
+	if (game->key[97] && !is_wall(game, game->px + round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view))), game->py - round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view)))))
 	{
 		game->is_moving = 1;
-		game->Px += round(MOVE_SPEED * sin(rad(game->view)));
-		game->Py -= round(MOVE_SPEED * cos(rad(game->view)));
+		game->px += round(MOVE_SPEED * sin(rad(game->view)));
+		game->py -= round(MOVE_SPEED * cos(rad(game->view)));
 		return (1);
 	}
 	return (0);
@@ -359,8 +359,8 @@ void	open_door(t_game *game)
 	dst = end_point_door(game, game->view);
 	if (dst)
 	{
-		x = game->Px / 4  + dst * cos(rad(game->view));
-		y = game->Py / 4 + dst * sin(rad(game->view));
+		x = game->px / 4  + dst * cos(rad(game->view));
+		y = game->py / 4 + dst * sin(rad(game->view));
 		if (is_door(game, x * 100 / 25, y * 100 / 25))
 			game->map[y / 25][x / 25] = 'O';
 	}
@@ -421,8 +421,8 @@ void	render_player(t_game *game)
 	double	x;
 	double	y;
 
-	x = game->Px / 4.0;
-	y = game->Py / 4.0;
+	x = game->px / 4.0;
+	y = game->py / 4.0;
 	x += 0;
 	y += 0;
 	save_x = x;
@@ -495,8 +495,8 @@ int	end_point_2d(t_game *game, int view)
 	y = 0;
 	while (i < 60)
 	{
-		x = game->Px / 4  + i * cos(rad(view));
-		y = game->Py / 4 + i * sin(rad(view));
+		x = game->px / 4  + i * cos(rad(view));
+		y = game->py / 4 + i * sin(rad(view));
 		if (is_wall(game, x * 100 / 25, y * 100 / 25))
 			return (i);
 		i++;
@@ -515,8 +515,8 @@ int	end_point_door(t_game *game, int view)
 	y = 0;
 	while (i < 20)
 	{
-		x = game->Px / 4  + i * cos(rad(view));
-		y = game->Py / 4 + i * sin(rad(view));
+		x = game->px / 4  + i * cos(rad(view));
+		y = game->py / 4 + i * sin(rad(view));
 		if (is_door(game, x * 100 / 25, y * 100 / 25))
 			return (i);
 		i++;
@@ -571,10 +571,10 @@ void	ray_cast_2d(t_game *game)
 	max = game->view + 25;
 	while (min < max)
 	{
-		new_x = (game->Px) / SCALE  + end_point_2d(game, min) * cos(rad(min));
-		new_y = (game->Py) / SCALE  + end_point_2d(game, min) * sin(rad(min));
+		new_x = (game->px) / SCALE  + end_point_2d(game, min) * cos(rad(min));
+		new_y = (game->py) / SCALE  + end_point_2d(game, min) * sin(rad(min));
 		min++;
-		draw_line_2d((game->Px + 15) / SCALE, (game->Py + 15)
+		draw_line_2d((game->px + 15) / SCALE, (game->py + 15)
 			/ SCALE, new_x, new_y, game, color);
 	}
 }
@@ -586,8 +586,8 @@ void	update_player(t_game *game)
 	static	int	is_door;
 	static	int	next_door;
 
-	px = game->Px / 100;
-	py = game->Py / 100;
+	px = game->px / 100;
+	py = game->py / 100;
 	if (px < 0 || px > game->map_width || py < 0 || py > game->map_height)
 		return;
 	if (game->map[py] && game->map[py][px])
@@ -629,7 +629,7 @@ int	move(t_game *game)
 	render(game);
 	ray_cast_2d(game);
 	render_player(game);
-	put_img_to_img(game->map_frame, game->mini_map, (- game->Px / SCALE)  + 150, (- game->Py / SCALE) + 150);
+	put_img_to_img(game->map_frame, game->mini_map, (- game->px / SCALE)  + 150, (- game->py / SCALE) + 150);
 	update_player(game);
 	put_img_to_img(game->back, game->map_frame, 125, 395 + game->movment_shake / 2);
 	put_img_to_img(game->back, game->gun,0,15 + game->movment_shake / 2);

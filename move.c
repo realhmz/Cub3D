@@ -9,18 +9,18 @@ int	move_front(t_game *game)
 	b_y = round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view)));
 	if (game->key[119])
 	{
-		if (!is_wall(game, game->Px + b_x, game->Py + b_y))
+		if (!is_wall(game, game->px + b_x, game->py + b_y))
 		{
 			b_x = round(MOVE_SPEED * cos(rad(game->view + 30)));
 			b_y = round(MOVE_SPEED * sin(rad(game->view + 30)));
-			if (!is_wall(game, game->Px + b_x, game->Py + b_y))
+			if (!is_wall(game, game->px + b_x, game->py + b_y))
 			{
 				b_x = round(MOVE_SPEED * cos(rad(game->view - 30)));
 				b_y = round(MOVE_SPEED * sin(rad(game->view - 30)));
-				if (!is_wall(game, game->Px + b_x, game->Py + b_y))
+				if (!is_wall(game, game->px + b_x, game->py + b_y))
 				{
-					game->Py += round(MOVE_SPEED * sin(rad(game->view)));
-					game->Px += round(MOVE_SPEED * cos(rad(game->view)));
+					game->py += round(MOVE_SPEED * sin(rad(game->view)));
+					game->px += round(MOVE_SPEED * cos(rad(game->view)));
 				}
 			}
 		}
@@ -37,10 +37,10 @@ int	move_back(t_game *game)
 	by = round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view)));
 	if (game->key[115])
 	{
-		if (!is_wall(game, game->Px - bx, game->Py - by))
+		if (!is_wall(game, game->px - bx, game->py - by))
 		{
-			game->Py -= round(MOVE_SPEED * sin(rad(game->view)));
-			game->Px -= round(MOVE_SPEED * cos(rad(game->view)));
+			game->py -= round(MOVE_SPEED * sin(rad(game->view)));
+			game->px -= round(MOVE_SPEED * cos(rad(game->view)));
 		}
 	}
 	return (0);
@@ -53,10 +53,10 @@ int	move_right(t_game *game)
 
 	bx = round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view)));
 	by = round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view)));
-	if (game->key[100] && !is_wall(game, game->Px - bx, game->Py + by))
+	if (game->key[100] && !is_wall(game, game->px - bx, game->py + by))
 	{
-		game->Px -= round(MOVE_SPEED * sin(rad(game->view)));
-		game->Py += round(MOVE_SPEED * cos(rad(game->view)));
+		game->px -= round(MOVE_SPEED * sin(rad(game->view)));
+		game->py += round(MOVE_SPEED * cos(rad(game->view)));
 	}
 	return (0);
 }
@@ -68,10 +68,10 @@ int	move_left(t_game *game)
 
 	bx = round((MOVE_SPEED + PLAYER_BUFFER) * sin(rad(game->view)));
 	by = round((MOVE_SPEED + PLAYER_BUFFER) * cos(rad(game->view)));
-	if (game->key[97] && !is_wall(game, game->Px + bx, game->Py - by))
+	if (game->key[97] && !is_wall(game, game->px + bx, game->py - by))
 	{
-		game->Px += round(MOVE_SPEED * sin(rad(game->view)));
-		game->Py -= round(MOVE_SPEED * cos(rad(game->view)));
+		game->px += round(MOVE_SPEED * sin(rad(game->view)));
+		game->py -= round(MOVE_SPEED * cos(rad(game->view)));
 	}
 	return (0);
 }
