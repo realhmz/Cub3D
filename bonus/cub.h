@@ -10,9 +10,7 @@
 # include <stdbool.h>
 # include "./libft/libft.h"
 # include "./minilibx-linux/mlx.h"
-#include <sys/file.h>
-
-# include   <pthread.h>
+# include <sys/file.h>
 
 # define BUFFER_SIZE 42
 # define WIND_W 1280
@@ -31,20 +29,9 @@
 #define SHAKE_AMPLITUDE 25.0
 #define SHAKE_FREQUENCY 0.10
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <linux/videodev2.h>
-#include <sys/ioctl.h>
-#include <sys/mman.h>
-#include <errno.h>
 // #include <mlx.h>
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
-#define DEVICE "/dev/video0"
-#define BUFFER_COUNT 4
+
 
 
 typedef struct s_img
