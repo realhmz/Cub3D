@@ -23,7 +23,6 @@
 # define TILE_SIZE 100
 # define PLAYER_BUFFER 10
 
-
 typedef struct s_img
 {
 	void	*img_ptr;
@@ -36,7 +35,7 @@ typedef struct s_img
 	void	*win;
 }	t_img;
 
-typedef	struct s_fix
+typedef struct s_fix
 {
 	double	step;
 	double	inc_y;
@@ -49,8 +48,7 @@ typedef	struct s_fix
 	double	hit_up;
 	double	hit_down;
 	int		color;
-} t_fix;
-
+}	t_fix;
 
 typedef struct s_dda
 {
@@ -69,7 +67,7 @@ typedef struct s_dda
 	int		hit;
 	int		side;
 	int		i;
-}   t_dda;
+}	t_dda;
 
 typedef struct s_line
 {
@@ -84,16 +82,16 @@ typedef struct s_line
 
 typedef struct s_ray
 {
-	double view;
-	double min; 
-	double angle_step;
-	float ca;
-	int ray;
-	int line_height;
-	int y_start;
-	int y_end;
-	double ray_angle;
-}		t_ray;
+	double	view;
+	double	min;
+	double	angle_step;
+	float	ca;
+	int		ray;
+	int		line_height;
+	int		y_start;
+	int		y_end;
+	double	ray_angle;
+}	t_ray;
 
 typedef struct s_game
 {
@@ -134,6 +132,7 @@ typedef struct s_game
 size_t			ftstrlen(const char *s);
 char			*ftstrdup(const char *s1);
 char			*my_strjoin(char *s1, char const *s2);
+void			err(char *str);
 char			*get_next_line(int fd, bool flag);
 
 bool	space_checker(char c);

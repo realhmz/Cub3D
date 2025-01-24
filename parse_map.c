@@ -48,7 +48,7 @@ int	fillemptyspace(t_game *game, int j, char *s)
 					game->Py = j * TILE_SIZE + 25;
 				}
 				else
-					return (ft_putstr_fd("Error: invalid map\n", 2), false);
+					return (err("Error: invalid map\n"), false);
 			}
 		}
 	}
@@ -93,11 +93,11 @@ bool	closedmap(t_game *game, int len)
 			i = -1;
 			while (s && s[++i])
 				if (s[i] != '1')
-					return (ft_putstr_fd("Error: invalid map\n", 2), false);
+					return (err("Error: invalid map\n"), false);
 		}
 		else
 			if (!checkwall(game->map, j))
-				return (ft_putstr_fd("Error: invalid map\n", 2), false);
+				return (err("Error: invalid map\n"), false);
 	}
 	return (true);
 }
@@ -112,6 +112,6 @@ bool	parse_map(t_game *game)
 	if (!closedmap(game, len))
 		return (false);
 	if (!game->pv)
-		return (perror("Error: Player is not exist\n"), false);
+		return (err("Error: Player is not exist\n"), false);
 	return (true);
 }

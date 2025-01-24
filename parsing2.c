@@ -51,7 +51,7 @@ bool	line_parser(t_game *game, char *var, char *str, int i)
 		while (str[i] && ft_isdigit(str[i]))
 			i++;
 		if (str[i] && !space_checker(str[i]) && str[i] != ',')
-			return (printf("invalide line of RGB color\n"), false);
+			return (err("invalide line of RGB color\n"), false);
 		else
 		{
 			temp = ft_substr(str, start, i - start);

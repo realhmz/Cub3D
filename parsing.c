@@ -8,7 +8,7 @@ t_list	*parse_args(t_game *game, char *arg, t_list *lst)
 	fd = open(arg, O_RDONLY);
 	line = get_next_line(fd, 0);
 	if (!line)
-		return (perror("Error\n"), get_next_line(fd, 1), NULL);
+		return (err("Error\n"), get_next_line(fd, 1), NULL);
 	while (line && !save_checker(game, 0, 0))
 	{
 		if (!fillin_data(game, line))
@@ -82,7 +82,7 @@ bool	check_lst(t_list *lst)
 		ptr = ptr->next;
 	if (!ptr)
 	{
-		ft_putstr_fd("ERROR : there is no map\n", 2);
+		err("ERROR : there is no map\n");
 		return (false);
 	}
 	while (ptr && !searchar(ptr->content))
@@ -93,7 +93,7 @@ bool	check_lst(t_list *lst)
 			ptr = ptr->next;
 		if (ptr)
 		{
-			ft_putstr_fd("ERROR : detecting characters after the map\n", 2);
+			err("ERROR : detecting characters after the map\n");
 			return (false);
 		}
 	}
@@ -108,7 +108,7 @@ t_game	*parsing(char *arg)
 	if (ft_strncmp(arg + ft_strlen(arg) - 4, ".cub", 4)
 		|| access(arg, F_OK | R_OK) == -1)
 	{
-		ft_putstr_fd("Error : Your map file is invalid.\n", 2);
+		err("Error : Your map file is invalid.\n");
 		return (NULL);
 	}
 	game = ft_calloc(1, sizeof(t_game));
