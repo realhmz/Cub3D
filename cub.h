@@ -134,32 +134,27 @@ char			*ftstrdup(const char *s1);
 char			*my_strjoin(char *s1, char const *s2);
 void			err(char *str);
 char			*get_next_line(int fd, bool flag);
-
-bool	space_checker(char c);
-bool	check_var(char *str, t_game *game);
-bool	save_checker(t_game *game, bool flag, char c);
-bool	afterline(char *line, int i);
-bool	path_checker(t_game *game, char *var, char *line, int i);
-
-bool	searchar(char *str);
-bool	help(char *temp, t_game *game, int *counter, char *var);
-bool	line_parser(t_game *game, char *var, char *str, int i);
-bool	color_checker(t_game *game, char *var, char *line, int i);
-bool	put_val(t_game *game, char *str, char *line, int i);
-
-bool	handle_str(t_game *game, char *str, char *line, int i);
-bool	fillin_data(t_game *game, char *line);
-t_list	*fillin_map(char *line, t_list *lst);
-bool	done(t_game *game);
-bool	help2(char *line, int fd, t_game *game);
-
+bool			space_checker(char c);
+bool			check_var(char *str, t_game *game);
+bool			save_checker(t_game *game, bool flag, char c);
+bool			afterline(char *line, int i);
+bool			path_checker(t_game *game, char *var, char *line, int i);
+bool			searchar(char *str);
+bool			help(char *temp, t_game *game, int *counter, char *var);
+bool			line_parser(t_game *game, char *var, char *str, int i);
+bool			color_checker(t_game *game, char *var, char *line, int i);
+bool			put_val(t_game *game, char *str, char *line, int i);
+bool			handle_str(t_game *game, char *str, char *line, int i);
+bool			fillin_data(t_game *game, char *line);
+t_list			*fillin_map(char *line, t_list *lst);
+bool			done(t_game *game);
+bool			help2(char *line, int fd, t_game *game);
 t_game			*parsing(char *arg);
 void			ft_free(t_game *game);
 bool			parse_map(t_game *game);
-
-double	end_point_while(t_game *game, t_dda *vars);
-void	dda_vars_init(t_game *game, double view, t_dda *vars);
-int	is_wall_p(t_game *game, double x, double y);
+double			end_point_while(t_game *game, t_dda *vars);
+void			dda_vars_init(t_game *game, double view, t_dda *vars);
+int				is_wall_p(t_game *game, double x, double y);
 // images
 void			put_img_to_img(t_img dst, t_img src, int x, int y);
 unsigned int	get_pixel_img(t_img img, int x, int y);
@@ -170,29 +165,25 @@ t_img			new_img(int w, int h, t_game *game);
 int				calc_darkness(double distance, int color);
 double			end_point(t_game *game, double view);
 double			rad(double angle);
-int	get_wall_color(t_game *game, double curr_hit);
+int				get_wall_color(t_game *game, double curr_hit);
 //utils
-int	calc_map_h(char **map);
-int	max_width(char **map);
-int	get_ceiling_color(int *rgb);
-int	get_pv(char pv);
+int				calc_map_h(char **map);
+int				max_width(char **map);
+int				get_ceiling_color(int *rgb);
+int				get_pv(char pv);
 //moves
-int is_wall(t_game *game, int x, int y);
-int	draw_line_simple(int x1, int y1, int y2,t_game *game);
-void	player_moves(t_game *game);
-int	win(t_game *game);
-
-int	win(t_game *game);
-int	is_wall(t_game *game, int x, int y);
-int	key_press(int keycode, t_game *game);
-int	key_release(int keycode, t_game *game);
-int	move(t_game *game);
-
+int				is_wall(t_game *game, int x, int y);
+int				draw_line_simple(int x1, int y1, int y2, t_game *game);
+void			player_moves(t_game *game);
+int				win(t_game *game);
+int				key_press(int keycode, t_game *game);
+int				key_release(int keycode, t_game *game);
+int				move(t_game *game);
 // ray_casting
-void	fix_init(t_game *game, t_fix *fix);
-int	fix_draw(int x, t_game *game, double distance);
-int	calc_darkness(double dst, int color);
-void	ray_init(t_game *game, t_ray *ray);
-void	ray_cast(t_game *game);
+void			fix_init(t_game *game, t_fix *fix);
+int				fix_draw(int x, t_game *game, double distance);
+int				calc_darkness(double dst, int color);
+void			ray_init(t_game *game, t_ray *ray);
+void			ray_cast(t_game *game);
 
 #endif

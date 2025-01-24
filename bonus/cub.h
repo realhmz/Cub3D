@@ -124,6 +124,7 @@ typedef struct s_game
 size_t	ftstrlen(const char *s);
 char	*ftstrdup(const char *s1);
 char	*my_strjoin(char *s1, char const *s2);
+void	err(char *str);
 char	*get_next_line(int fd, bool flag);
 
 bool	space_checker(char c);

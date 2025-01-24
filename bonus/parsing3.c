@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing3.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hboustaj <hboustaj@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/24 15:07:53 by hboustaj          #+#    #+#             */
+/*   Updated: 2025/01/24 15:07:54 by hboustaj         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub.h"
 
 bool	handle_str(t_game *game, char *str, char *line, int i)
@@ -52,7 +64,7 @@ bool	done(t_game *game)
 	if (!game->ceiling || !game->east || !game->west
 		|| !game->north || !game->south || !game->floor)
 	{
-		ft_putstr_fd("ERROR : direction is missing\n", 2);
+		err("ERROR : direction is missing\n");
 		return (false);
 	}
 	while (++i <= 2)
@@ -60,7 +72,7 @@ bool	done(t_game *game)
 		if ((game->ceiling[i] < 0 || game->ceiling[i] > 255)
 			|| (game->floor[i] < 0 || game->floor[i] > 255))
 		{
-			ft_putstr_fd("ERROR : RGB has invalid value\n", 2);
+			err("ERROR : RGB has invalid value\n");
 			return (false);
 		}
 	}

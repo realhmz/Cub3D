@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing2.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hboustaj <hboustaj@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/24 15:07:46 by hboustaj          #+#    #+#             */
+/*   Updated: 2025/01/24 15:07:47 by hboustaj         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub.h"
 
 bool	searchar(char *str)
@@ -51,7 +63,7 @@ bool	line_parser(t_game *game, char *var, char *str, int i)
 		while (str[i] && ft_isdigit(str[i]))
 			i++;
 		if (str[i] && !space_checker(str[i]) && str[i] != ',')
-			return (printf("invalide line of RGB color\n"), false);
+			return (err("invalide line of RGB color\n"), false);
 		else
 		{
 			temp = ft_substr(str, start, i - start);

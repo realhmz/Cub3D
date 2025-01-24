@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing1.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hboustaj <hboustaj@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/24 15:07:42 by hboustaj          #+#    #+#             */
+/*   Updated: 2025/01/24 15:07:43 by hboustaj         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub.h"
 
 bool	space_checker(char c)
@@ -23,7 +35,7 @@ bool	check_var(char *str, t_game *game)
 	if (!ft_strncmp(str, "C", 1) && ft_strlen(str) == 1
 		&& game->ceiling[0] == -1)
 		return (true);
-	ft_putstr_fd("ERROR : a non valid element detected\n", 2);
+	err("ERROR : a non valid element detected\n");
 	return (false);
 }
 
@@ -77,7 +89,7 @@ bool	path_checker(t_game *game, char *var, char *line, int i)
 	if (ft_strncmp(path + ft_strlen(path) - 4, ".xpm", 4)
 		|| access(path, F_OK | R_OK) == -1)
 	{
-		ft_putstr_fd("ERROR : invalid path (.xpm).\n", 2);
+		err("ERROR : invalid path (.xpm).\n");
 		return (false);
 	}
 	if (!ft_strncmp(var, "NO", 2) && save_checker(game, 1, 'a'))

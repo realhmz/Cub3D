@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_map.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hboustaj <hboustaj@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/24 15:07:27 by hboustaj          #+#    #+#             */
+/*   Updated: 2025/01/24 15:07:28 by hboustaj         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub.h"
 
 int	fillemptyspace(t_game *game, int j, char *s)
@@ -12,7 +24,7 @@ int	fillemptyspace(t_game *game, int j, char *s)
 		{
 			if (s[i] == ' ')
 				s[i] = '1';
-			if (s[i] != '1' && s[i] != '0')
+			if (s[i] != '1' && s[i] != '0' && s[i] != 'D')
 			{
 				if ((s[i] == 'N' || s[i] == 'S' || s[i] == 'W' || s[i] == 'E')
 					&& !game->px && !game->py)
@@ -22,7 +34,7 @@ int	fillemptyspace(t_game *game, int j, char *s)
 					game->py = j * TILE_SIZE + 25;
 				}
 				else
-					return (ft_putstr_fd("Error: invalid map\n", 2), false);
+					return (err("Error: invalid map\n"), false);
 			}
 		}
 	}
@@ -67,11 +79,11 @@ bool	closedmap(t_game *game, int len)
 			i = -1;
 			while (s && s[++i])
 				if (s[i] != '1')
-					return (ft_putstr_fd("Error: invalid map\n", 2), false);
+					return (err("Error: invalid map\n"), false);
 		}
 		else
 			if (!checkwall(game->map, j))
-				return (ft_putstr_fd("Error: invalid map\n", 2), false);
+				return (err("Error: invalid map\n"), false);
 	}
 	return (true);
 }
@@ -86,6 +98,6 @@ bool	parse_map(t_game *game)
 	if (!closedmap(game, len))
 		return (false);
 	if (!game->pv)
-		return (perror("Error: Player is not exist\n"), false);
+		return (err("Error: Player is not exist\n"), false);
 	return (true);
 }
