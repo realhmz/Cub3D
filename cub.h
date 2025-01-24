@@ -181,4 +181,18 @@ int is_wall(t_game *game, int x, int y);
 int	draw_line_simple(int x1, int y1, int y2,t_game *game);
 void	player_moves(t_game *game);
 int	win(t_game *game);
+
+int	win(t_game *game);
+int	is_wall(t_game *game, int x, int y);
+int	key_press(int keycode, t_game *game);
+int	key_release(int keycode, t_game *game);
+int	move(t_game *game);
+
+// ray_casting
+void	fix_init(t_game *game, t_fix *fix);
+int	fix_draw(int x, t_game *game, double distance);
+int	calc_darkness(double dst, int color);
+void	ray_init(t_game *game, t_ray *ray);
+void	ray_cast(t_game *game);
+
 #endif

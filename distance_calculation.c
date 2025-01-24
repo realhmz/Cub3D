@@ -1,5 +1,32 @@
 #include "cub.h"
 
+int	calc_darkness(double dst, int color)
+{
+	int	r;
+	int	g;
+	int	b;
+
+	r = color / 256 / 256;
+	g = (color / 256) % 256;
+	b = color % 256;
+	r = r - (dst / 4);
+	g = g - (dst / 4);
+	b = b - (dst / 4);
+	if (r < 0)
+		r = 0;
+	if (g < 0)
+		g = 0;
+	if (b < 0)
+		b = 0;
+	if (r > 255)
+		r = 255;
+	if (g > 255)
+		g = 255;
+	if (b > 255)
+		b = 255;
+	return (r * 256 * 256 + g * 256 + b);
+}
+
 double	end_point_while2(t_game *game, t_dda *vars)
 {
 	double	min_wall_dist;

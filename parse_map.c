@@ -1,5 +1,31 @@
 #include "cub.h"
 
+void	ft_free(t_game *game)
+{
+	int	i;
+
+	free(game->save);
+	free(game->ceiling);
+	free(game->floor);
+	if (game->east)
+		free(game->east);
+	if (game->south)
+		free(game->south);
+	if (game->north)
+		free(game->north);
+	if (game->west)
+		free(game->west);
+	i = -1;
+	if (game->map)
+	{
+		if (game->map[++i])
+			while (game->map && game->map[i])
+				free(game->map[i++]);
+		free(game->map);
+	}
+	free(game);
+}
+
 int	fillemptyspace(t_game *game, int j, char *s)
 {
 	int		i;
