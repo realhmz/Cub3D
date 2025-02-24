@@ -214,3 +214,4 @@ double	end_point(t_game *game, double view)
 	wall_dist = calc_wall_dist(&vars, game, &wall_x);
 	return (wall_dist * 100);
 }
+

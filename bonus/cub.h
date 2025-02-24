@@ -46,6 +46,47 @@ typedef struct s_img
 	void	*win;
 }	t_img;
 
+typedef struct s_fix
+{
+	double	step;
+	double	inc_y;
+	double	mid_y;
+	double	curr_y_up;
+	double	curr_y_down;
+	double	visible_height;
+	double	hit_y;
+	double	tex_start;
+	double	hit_up;
+	double	hit_down;
+	int		color;
+}	t_fix;
+
+
+typedef struct s_line
+{
+	double	step;
+	double	dx;
+	double	dy;
+	double	inc_x;
+	double	inc_y;
+	double	curr_x;
+	double	curr_y;
+}	t_line;
+
+typedef struct s_ray
+{
+	double	view;
+	double	min;
+	double	angle_step;
+	float	ca;
+	int		ray;
+	int		line_height;
+	int		y_start;
+	int		y_end;
+	double	ray_angle;
+}	t_ray;
+
+
 typedef struct s_dda
 {
     double ray_dir_x;
@@ -102,6 +143,7 @@ typedef struct s_game
     int     floor_color;
     int     movment_shake;
     int     is_moving;
+    int     color;
     t_img   mini_map;
     t_img   map_frame;
     t_img   back;
@@ -158,9 +200,8 @@ void	put_pixel_img(t_img img, int x, int y, int color);
 t_img	new_file_img(char *path, t_game *game);
 t_img	new_img(int w, int h, t_game *game);
 // rendring
-int calc_darkness(t_game *game, double distance, int color);
+// int calc_darkness(t_game *game, double distance, int color);
 double	end_point(t_game *game, double view);
-double	rad(double angle);
 
 int	move_left(t_game *game);
 int move_right(t_game *game);
@@ -176,4 +217,27 @@ void *read_xpm_safely(void *mlx, int *width, int *height);
 int	end_point_door(t_game *game, int view);
 void update_movement_shake(t_game *game);
 
+
+//
+
+void	render_player(t_game *game);
+void	fill_map_frame(t_game *game);
+void    render(t_game *game);
+void	ray_cast_2d(t_game *game);
+void	draw_line_2d(int x0, int y0, int x1, int y1, t_game *game, int color);
+int is_door(t_game *game, int x, int y);
+int	calc_darkness_2d(t_game *game, double dst, int color);
+int	fix_draw(int x, t_game *game, double distance);
+void	ray_cast(t_game *game);
+double	rad(double angle);
+
+int	get_ceiling_color(int *rgb);
+int	get_pv(char pv);
+int	max_width(char **map);
+int	calc_map_h(char **map);
+int get_wall_color(t_game *game, double curr_hit);
+int	draw_line_simple(int x1, int y1, int y2,t_game *game);
+int	calc_darkness(double dst, int color);
+int	draw_line_simple(int x1, int y1, int y2, t_game *game);
+int	is_wall(t_game *game, int x, int y);
 #endif

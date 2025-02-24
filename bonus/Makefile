@@ -14,6 +14,11 @@ SRC = main.c \
 	image.c\
 	distance_calculation.c\
 	animation.c\
+	ray_cast.c\
+	utils.c\
+	mini_map.c\
+	mini_map2.c\
+	line.c\
 
 OBJ = $(SRC:.c=.o)
 LIBFT = libft/libft.a
